@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 export default function Home () {
   return (
     <div>
-      <Button>Click</Button>
+      <Button>点击按钮</Button>
     </div>
   )
 }
