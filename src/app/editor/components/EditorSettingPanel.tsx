@@ -1,6 +1,6 @@
 const EditorSettingPanel = () => {
   return (
-    <div>
+    <div className={'w-72 h-full bg-white rounded-md'}>
       EditorSettingPanel
     </div>
   )

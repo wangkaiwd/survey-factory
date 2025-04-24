@@ -4,7 +4,7 @@ import EditorSettingPanel from '@/app/editor/components/EditorSettingPanel'
 
 const Editor = () => {
   return (
-    <div>
+    <div className="flex h-full">
       <EditorLeftPanel/>
       <EditorCanvas/>
       <EditorSettingPanel/>
