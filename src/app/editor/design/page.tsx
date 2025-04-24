@@ -1,7 +1,13 @@
+import EditorLeftPanel from '@/app/editor/components/EditorLeftPanel'
+import EditorCanvas from '@/app/editor/components/EditorCanvas'
+import EditorSettingPanel from '@/app/editor/components/EditorSettingPanel'
+
 const Editor = () => {
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground">
-      编辑器
+    <div>
+      <EditorLeftPanel/>
+      <EditorCanvas/>
+      <EditorSettingPanel/>
     </div>
   )
 }

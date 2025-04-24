@@ -1,14 +1,13 @@
 export const joinQuery = (url: string, query: Record<string, string | null | undefined>) => {
-  let queryStr = ''
-  Object.keys(query).forEach(key => {
+  const queryWithoutNullish: Record<string, string> = {}
+  for (const key in query) {
     const val = query[key]
     if (val) {
-      if (queryStr) {
-        queryStr += '&'
-      }
-      queryStr += `${key}=${val}`
+      queryWithoutNullish[key] = val
     }
-  })
+  }
+
+  const queryStr = new URLSearchParams(queryWithoutNullish).toString()
   if (!queryStr) {
     return url
   }

@@ -4,13 +4,13 @@ import Link from 'next/link'
 import { ArrowLeft, Eye, Settings } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { usePathname, useSearchParams } from 'next/navigation'
-import { useAopRouter } from '@/hooks/useAopRouter'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { joinQuery } from '@/lib/url'
 
 const NavBar = () => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const router = useAopRouter()
+  const router = useRouter()
 
   return (
     <div className="flex items-center justify-between px-4 h-16 border-b bg-background">
@@ -31,7 +31,7 @@ const NavBar = () => {
       <div className="flex items-center">
         <Tabs
           defaultValue={pathname}
-          onValueChange={(value) => { router.push({ pathname: value, query: { id: searchParams.get('id') } }) }}
+          onValueChange={(value) => { router.push(joinQuery(value, { id: searchParams.get('id') })) }}
           className="w-auto"
         >
           <TabsList>
