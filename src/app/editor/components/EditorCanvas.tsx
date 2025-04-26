@@ -26,7 +26,7 @@ const EditorCanvas = () => {
             onAlignChange={setAlign}
             placeholder={'请输入标题'}
             editable={activeBlockId === 'title-id'}
-            textClassName={'text-3xl'}
+            className={'text-3xl'}
             value={value}
             onChange={setValue}
           />
