@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react'
 import EditableText, { AlignType } from '@/components/EditableText'
 import { useClickOutside } from '@/hooks/useClickOutside'
 import TextContainer from '@/components/TextContainer'
+import OpenQuestion from '@/blocks/OpenQuestion'
 
 interface FormTextStyle {
   align: AlignType
@@ -12,6 +13,8 @@ interface FormTextStyle {
 interface FormState {
   title: FormTextStyle
   description: FormTextStyle
+
+  [key: string]: any
 }
 
 const EditorCanvas = () => {
@@ -26,13 +29,28 @@ const EditorCanvas = () => {
       align: 'center',
       text: '描述',
     },
+    questions: [
+      {
+        id: 'question-1',
+        type: 'OpenQuestion',
+        props: {
+          title: '问答题',
+          placeholder: '请输入问题',
+        },
+      },
+    ],
   })
+  const openQuestion = formState.questions[0]
   useClickOutside(blockRefs, () => {
     setActiveBlockId(undefined)
   })
   const addBlockRef = (el: HTMLDivElement | null) => {
-    if (el && !blockRefs.current.includes(el)) {
+    if (!el) {return}
+    const index = blockRefs.current.indexOf(el)
+    if (index === -1) {
       blockRefs.current.push(el)
+    } else {
+      blockRefs.current[index] = el
     }
   }
   return (
@@ -68,6 +86,24 @@ const EditorCanvas = () => {
             onChange={(textStyle) => { setFormState({ ...formState, description: textStyle as FormTextStyle }) }}
           />
         </TextContainer>
+        <OpenQuestion
+          onClick={() => setActiveBlockId(openQuestion.id)}
+          ref={addBlockRef}
+          editable={activeBlockId === openQuestion.id}
+          {...openQuestion.props}
+          onTitleChange={(title) => {
+            setFormState({
+              ...formState,
+              questions: [{ ...openQuestion, props: { ...openQuestion.props, title } }],
+            })
+          }}
+          onPlaceholderChange={(placeholder) => {
+            setFormState({
+              ...formState,
+              questions: [{ ...openQuestion, props: { ...openQuestion.props, placeholder } }],
+            })
+          }}
+        />
       </div>
     </div>
   )

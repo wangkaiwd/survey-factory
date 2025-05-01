@@ -12,10 +12,11 @@ export interface EditableTextProps extends Omit<HTMLAttributes<HTMLDivElement>, 
   editable?: boolean;
   placeholder?: string;
   align?: AlignType;
+  wrapperClassName?: string;
 }
 
 const EditableText = (props: EditableTextProps) => {
-  const { value, editable = false, placeholder, align, className, onChange } = props
+  const { value, editable = false, placeholder, align, className, onChange, wrapperClassName } = props
   const contentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -53,7 +54,7 @@ const EditableText = (props: EditableTextProps) => {
   }
 
   return (
-    <div>
+    <div className={wrapperClassName}>
       <div
         onBlur={onBlur}
         ref={contentRef}
