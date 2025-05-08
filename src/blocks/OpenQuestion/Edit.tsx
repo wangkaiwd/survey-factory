@@ -23,7 +23,7 @@ const OpenQuestionEdit = (props: OpenQuestionEditProps) => {
         <EditableText
           editable={editable}
           wrapperClassName={'flex-1'}
-          className={'text-xl'}
+          className={'text-lg'}
           placeholder={'单选题'}
           value={title}
           onChange={({ text }) => onTitleChange(text)}

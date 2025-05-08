@@ -4,6 +4,7 @@ import EditableText, { AlignType } from '@/components/EditableText'
 import { useClickOutside } from '@/hooks/useClickOutside'
 import TextContainer from '@/components/TextContainer'
 import OpenQuestion from '@/blocks/OpenQuestion'
+import BlockContainer from '@/components/BlockContainer'
 
 interface FormTextStyle {
   align: AlignType
@@ -86,24 +87,30 @@ const EditorCanvas = () => {
             onChange={(textStyle) => { setFormState({ ...formState, description: textStyle as FormTextStyle }) }}
           />
         </TextContainer>
-        <OpenQuestion
-          onClick={() => setActiveBlockId(openQuestion.id)}
-          ref={addBlockRef}
-          editable={activeBlockId === openQuestion.id}
-          {...openQuestion.props}
-          onTitleChange={(title) => {
-            setFormState({
-              ...formState,
-              questions: [{ ...openQuestion, props: { ...openQuestion.props, title } }],
-            })
-          }}
-          onPlaceholderChange={(placeholder) => {
-            setFormState({
-              ...formState,
-              questions: [{ ...openQuestion, props: { ...openQuestion.props, placeholder } }],
-            })
-          }}
-        />
+        <div className={'mt-4'}>
+          <BlockContainer
+            ref={addBlockRef}
+            onClick={() => setActiveBlockId(openQuestion.id)}
+            editable={activeBlockId === openQuestion.id}
+          >
+            <OpenQuestion
+              {...openQuestion.props}
+              editable={activeBlockId === openQuestion.id}
+              onTitleChange={(title) => {
+                setFormState({
+                  ...formState,
+                  questions: [{ ...openQuestion, props: { ...openQuestion.props, title } }],
+                })
+              }}
+              onPlaceholderChange={(placeholder) => {
+                setFormState({
+                  ...formState,
+                  questions: [{ ...openQuestion, props: { ...openQuestion.props, placeholder } }],
+                })
+              }}
+            />
+          </BlockContainer>
+        </div>
       </div>
     </div>
   )

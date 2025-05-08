@@ -6,25 +6,20 @@ export interface TextContainerProps extends HTMLAttributes<HTMLDivElement> {
   editable?: boolean;
 }
 
-const TextContainer = (props: TextContainerProps) => {
+const BlockContainer = (props: TextContainerProps) => {
   const { ref, className, editable = false, ...rest } = props
   const getCls = () => {
-    const base = 'px-10'
-    if (!editable) {return cn(base) }
-    return cn(base, 'shadow-container border-y border-l-4 border-l-blue-500 py-3', className)
-  }
-  const getInnerCls = () => {
+    const baseCls = 'px-10 py-6'
     if (!editable) {
-      return cn('hover:border-b hover:border-gray-200')
+      return cn(baseCls, 'hover:shadow-container hover:border-y', className)
     }
+    return cn(baseCls, 'shadow-container border-y border-l-4 border-l-blue-500', className)
   }
   return (
     <div ref={ref} className={getCls()} {...rest} >
-      <div className={getInnerCls()}>
-        {props.children}
-      </div>
+      {props.children}
     </div>
   )
 }
 
-export default TextContainer
+export default BlockContainer

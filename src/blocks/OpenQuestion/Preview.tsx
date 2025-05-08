@@ -13,7 +13,7 @@ const OpenQuestionPreview = (props: OpenQuestionPreviewProps) => {
   return (
     <div className={cn(className)}>
       <div className={'flex items-center justify-between'}>
-        <div className={'text-xl flex-1'}>{title}</div>
+        <div className={'text-lg font-medium flex-1'}>{title}</div>
       </div>
       <Textarea placeholder={placeholder} className={'resize-none mt-2'}/>
     </div>
