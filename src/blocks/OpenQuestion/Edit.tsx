@@ -1,7 +1,7 @@
 import EditableText from '@/components/EditableText'
 import { MessageCircleIcon } from 'lucide-react'
 import { Input } from '@/components/ui/input'
-import { ChangeEvent, HTMLAttributes, Ref } from 'react'
+import { ChangeEvent, HTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 
 interface OpenQuestionEditProps extends HTMLAttributes<HTMLDivElement> {
@@ -28,8 +28,8 @@ const OpenQuestionEdit = (props: OpenQuestionEditProps) => {
           value={title}
           onChange={({ text }) => onTitleChange(text)}
         />
-        <div className={'inline-flex items-center justify-between py-2 px-3'}>
-          <MessageCircleIcon/> 问答题
+        <div className={'inline-flex items-center justify-between py-1 px-2 rounded-sm text-sm bg-gray-100 ml-3'}>
+          <MessageCircleIcon className={'h-3.5'}/> 问答题
         </div>
       </div>
       <Input className={'mt-2'} value={placeholder} onChange={onInputChange}/>
