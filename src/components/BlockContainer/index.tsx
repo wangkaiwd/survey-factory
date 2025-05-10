@@ -9,7 +9,7 @@ export interface TextContainerProps extends HTMLAttributes<HTMLDivElement> {
 const BlockContainer = (props: TextContainerProps) => {
   const { ref, className, editable = false, ...rest } = props
   const getCls = () => {
-    const baseCls = 'px-10 py-6'
+    const baseCls = 'px-10 pt-3 pb-6'
     if (!editable) {
       return cn(baseCls, 'hover:shadow-container hover:border-y', className)
     }

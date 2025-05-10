@@ -1,10 +1,11 @@
 'use client'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import EditableText, { AlignType } from '@/components/EditableText'
 import { useClickOutside } from '@/hooks/useClickOutside'
 import TextContainer from '@/components/TextContainer'
-import OpenQuestion from '@/blocks/OpenQuestion'
 import BlockContainer from '@/components/BlockContainer'
+import { blockMap } from '@/blocks'
+import { FormProvider, useForm } from 'react-hook-form'
 
 interface FormTextStyle {
   align: AlignType
@@ -21,7 +22,8 @@ interface FormState {
 const EditorCanvas = () => {
   const [activeBlockId, setActiveBlockId] = useState<string | undefined>(undefined)
   const blockRefs = useRef<HTMLDivElement[]>([])
-  const [formState, setFormState] = useState<FormState>({
+  const [pageInfo, setPageInfo] = useState<FormState>({
+    id: 'page-id-1',
     title: {
       align: 'center',
       text: '标题',
@@ -30,18 +32,30 @@ const EditorCanvas = () => {
       align: 'center',
       text: '描述',
     },
-    questions: [
-      {
-        id: 'question-1',
-        type: 'OpenQuestion',
-        props: {
-          title: '问答题',
-          placeholder: '请输入问题',
-        },
-      },
-    ],
   })
-  const openQuestion = formState.questions[0]
+  const [questions, setQuestions] = useState([
+    {
+      id: 'question-1',
+      type: 'OpenQuestion',
+      props: {
+        title: '问答题',
+        placeholder: '请输入问题',
+      },
+    },
+  ])
+  const methods = useForm({
+    values: {
+      questions,
+    },
+  })
+
+  useEffect(() => {
+    const { unsubscribe } = methods.watch((value: any) => {
+      setQuestions([...value.questions])
+    })
+    return () => unsubscribe()
+  }, [methods.watch])
+
   useClickOutside(blockRefs, () => {
     setActiveBlockId(undefined)
   })
@@ -54,8 +68,31 @@ const EditorCanvas = () => {
       blockRefs.current[index] = el
     }
   }
+
+  const renderBlocks = () => {
+    return questions.map((question) => {
+      const editable = activeBlockId === question.id
+      const BlockComponent = blockMap.get(question.type)
+      if (!BlockComponent) {
+        return null
+      }
+      return (
+        <BlockContainer
+          key={question.id}
+          ref={addBlockRef}
+          onClick={() => setActiveBlockId(question.id)}
+          editable={editable}
+        >
+          <BlockComponent
+            {...question.props}
+            editable={editable}
+          />
+        </BlockContainer>
+      )
+    })
+  }
   return (
-    <div className={'flex-1 bg-gray-50 flex items-center justify-center py-3 h-full'}>
+    <div className={'flex-1 bg-gray-100 flex items-center justify-center py-3 h-full'}>
       <div className={'w-[600px] bg-white rounded-md h-full py-6'}>
         <TextContainer
           editable={activeBlockId === 'title-id'}
@@ -63,13 +100,13 @@ const EditorCanvas = () => {
           onClick={() => setActiveBlockId('title-id')}
         >
           <EditableText
-            value={formState.title.text}
-            align={formState.title.align}
+            value={pageInfo.title.text}
+            align={pageInfo.title.align}
             placeholder={'请输入标题'}
             editable={activeBlockId === 'title-id'}
             className={'text-3xl'}
             onChange={(textStyle) => {
-              setFormState({ ...formState, title: textStyle as FormTextStyle })
+              setPageInfo({ ...pageInfo, title: textStyle as FormTextStyle })
             }}
           />
         </TextContainer>
@@ -80,36 +117,19 @@ const EditorCanvas = () => {
           onClick={() => setActiveBlockId('description-id')}
         >
           <EditableText
-            value={formState.description.text}
-            align={formState.description.align}
+            value={pageInfo.description.text}
+            align={pageInfo.description.align}
             placeholder={'请输入描述'}
             editable={activeBlockId === 'description-id'}
-            onChange={(textStyle) => { setFormState({ ...formState, description: textStyle as FormTextStyle }) }}
+            onChange={(textStyle) => { setPageInfo({ ...pageInfo, description: textStyle as FormTextStyle }) }}
           />
         </TextContainer>
         <div className={'mt-4'}>
-          <BlockContainer
-            ref={addBlockRef}
-            onClick={() => setActiveBlockId(openQuestion.id)}
-            editable={activeBlockId === openQuestion.id}
-          >
-            <OpenQuestion
-              {...openQuestion.props}
-              editable={activeBlockId === openQuestion.id}
-              onTitleChange={(title) => {
-                setFormState({
-                  ...formState,
-                  questions: [{ ...openQuestion, props: { ...openQuestion.props, title } }],
-                })
-              }}
-              onPlaceholderChange={(placeholder) => {
-                setFormState({
-                  ...formState,
-                  questions: [{ ...openQuestion, props: { ...openQuestion.props, placeholder } }],
-                })
-              }}
-            />
-          </BlockContainer>
+          <FormProvider {...methods}>
+            <form>
+              {renderBlocks()}
+            </form>
+          </FormProvider>
         </div>
       </div>
     </div>

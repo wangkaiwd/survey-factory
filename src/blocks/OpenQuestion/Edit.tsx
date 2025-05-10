@@ -1,38 +1,47 @@
 import EditableText from '@/components/EditableText'
 import { MessageCircleIcon } from 'lucide-react'
 import { Input } from '@/components/ui/input'
-import { ChangeEvent, HTMLAttributes } from 'react'
+import { HTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
+import { Controller, useFormContext } from 'react-hook-form'
 
 interface OpenQuestionEditProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   placeholder: string;
-  onTitleChange: (title: string) => void;
-  onPlaceholderChange: (placeholder: string) => void;
   editable?: boolean;
 }
 
 const OpenQuestionEdit = (props: OpenQuestionEditProps) => {
-  const { title, placeholder, onTitleChange, onPlaceholderChange, editable, className } = props
-  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onPlaceholderChange(e.target.value)
-  }
+  const { editable, className } = props
+  const { control } = useFormContext()
   return (
     <div className={cn(className)}>
       <div className={'flex items-center justify-between'}>
-        <EditableText
-          editable={editable}
-          wrapperClassName={'flex-1'}
-          className={'text-lg'}
-          placeholder={'单选题'}
-          value={title}
-          onChange={({ text }) => onTitleChange(text)}
+        <Controller
+          render={({ field }) => (
+            <EditableText
+              {...field}
+              editable={editable}
+              wrapperClassName={'flex-1'}
+              className={'text-lg'}
+              placeholder={'单选题'}
+              onChange={(textStyle) => {
+                field.onChange(textStyle.text)
+              }}
+            />
+          )}
+          name={`questions.0.props.title`}
+          control={control}
         />
         <div className={'inline-flex items-center justify-between py-1 px-2 rounded-sm text-sm bg-gray-100 ml-3'}>
           <MessageCircleIcon className={'h-3.5'}/> 问答题
         </div>
       </div>
-      <Input className={'mt-2'} value={placeholder} onChange={onInputChange}/>
+      <Controller
+        control={control}
+        render={({ field }) => <Input className={'mt-2'} {...field} />}
+        name={`questions.0.props.placeholder`}
+      />
     </div>
   )
 }
