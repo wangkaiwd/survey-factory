@@ -10,22 +10,13 @@ export const mockData = {
       text: '描述',
     },
   },
-  questions: [
-    {
-      id: 'question-1',
+
+  questions: Array.from({ length: 2 }, (_, index) => ({
+    id: `question-${index + 1}`,
       type: 'OpenQuestion',
       props: {
-        title: '问答题',
+      title: `问答题${index + 1}`,
         placeholder: '请输入问题',
       },
-    },
-    {
-      id: 'question-2',
-      type: 'OpenQuestion',
-      props: {
-        title: '问答题',
-        placeholder: '请输入问题',
-      },
-    },
-  ],
+  })),
 }

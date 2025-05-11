@@ -33,6 +33,7 @@ const OpenQuestionEdit = (props: OpenQuestionEditProps) => {
     <div className={cn(className)}>
       <div className={'flex items-center justify-between'}>
         <Controller
+          name={`questions.${activeQuestionIndex}.props.title`}
           render={({ field }) => (
             <EditableText
               {...field}
@@ -45,7 +46,6 @@ const OpenQuestionEdit = (props: OpenQuestionEditProps) => {
               }}
             />
           )}
-          name={`questions.${activeQuestionIndex}.props.title`}
           control={control}
         />
         <div className={'inline-flex items-center justify-between py-1 px-2 rounded-sm text-sm bg-gray-100 ml-3'}>
@@ -54,8 +54,8 @@ const OpenQuestionEdit = (props: OpenQuestionEditProps) => {
       </div>
       <Controller
         control={control}
-        render={({ field }) => <Input className={'mt-2'} {...field} />}
         name={`questions.${activeQuestionIndex}.props.placeholder`}
+        render={({ field }) => <Input className={'mt-2'} {...field} />}
       />
     </div>
   )

@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import EditableText, { AlignType } from '@/components/EditableText'
 import { useClickOutside } from '@/hooks/useClickOutside'
 import TextContainer from '@/components/TextContainer'
@@ -14,12 +14,12 @@ interface FormTextStyle {
   text: string
 }
 
-interface FormState {
-  title: FormTextStyle
-  description: FormTextStyle
-
-  [key: string]: any
-}
+// interface FormState {
+//   title: FormTextStyle
+//   description: FormTextStyle
+//
+//   [key: string]: any
+// }
 
 const EditorCanvas = () => {
   const setQuestions = useQuestionStore((state) => state.setQuestions)
@@ -43,7 +43,6 @@ const EditorCanvas = () => {
   useEffect(() => {
     console.log('useEffect---watch')
     const { unsubscribe } = methods.watch((value: any) => {
-      console.log('update', JSON.stringify(value, null, 2))
       setQuestions([...value.questions])
     })
     return () => unsubscribe()
