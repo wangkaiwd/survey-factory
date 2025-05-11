@@ -4,16 +4,31 @@ import { Input } from '@/components/ui/input'
 import { HTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 import { Controller, useFormContext } from 'react-hook-form'
+import { useQuestionStore } from '@/store/useQuestionStore'
 
 interface OpenQuestionEditProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   placeholder: string;
-  editable?: boolean;
+  id: string;
 }
 
 const OpenQuestionEdit = (props: OpenQuestionEditProps) => {
-  const { editable, className } = props
+  const { id, className } = props
   const { control } = useFormContext()
+
+  const activeQuestion = useQuestionStore((state) => {
+    const { activeQuestionId, questions } = state
+    return questions.find((question) => question.id === activeQuestionId)
+  })
+  const activeQuestionIndex = useQuestionStore((state) => {
+    const { activeQuestionId, questions } = state
+    return questions.findIndex((question) => question.id === activeQuestionId)
+  })
+
+  if (!activeQuestion) {
+    return null
+  }
+  const editable = activeQuestion.id === id
   return (
     <div className={cn(className)}>
       <div className={'flex items-center justify-between'}>
@@ -30,7 +45,7 @@ const OpenQuestionEdit = (props: OpenQuestionEditProps) => {
               }}
             />
           )}
-          name={`questions.0.props.title`}
+          name={`questions.${activeQuestionIndex}.props.title`}
           control={control}
         />
         <div className={'inline-flex items-center justify-between py-1 px-2 rounded-sm text-sm bg-gray-100 ml-3'}>
@@ -40,7 +55,7 @@ const OpenQuestionEdit = (props: OpenQuestionEditProps) => {
       <Controller
         control={control}
         render={({ field }) => <Input className={'mt-2'} {...field} />}
-        name={`questions.0.props.placeholder`}
+        name={`questions.${activeQuestionIndex}.props.placeholder`}
       />
     </div>
   )

@@ -2,21 +2,25 @@ import { HTMLAttributes } from 'react'
 import OpenQuestionEdit from '@/blocks/OpenQuestion/Edit'
 import OpenQuestionPreview from '@/blocks/OpenQuestion/Preview'
 import { cn } from '@/lib/utils'
+import { useQuestionStore } from '@/store/useQuestionStore'
 
 export interface OpenQuestionProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   placeholder: string;
-  editable?: boolean;
+  id: string;
 }
 
 // fixme: dynamic switch between edit and preview mode will cause useOutsideClick work not correctly
 const OpenQuestion = (props: OpenQuestionProps) => {
-  const { editable = false, title, placeholder, ...restProps } = props
+  const { id, title, placeholder, ...restProps } = props
+  console.log('render OpenQuestion', id)
+  const activeQuestionId = useQuestionStore((state) => state.activeQuestionId)
+  const editable = activeQuestionId === id
   return (
     <div {...restProps}>
       <OpenQuestionEdit
         title={title}
-        editable={editable}
+        id={id}
         className={cn({ 'hidden': !editable })}
         placeholder={placeholder}
       />
