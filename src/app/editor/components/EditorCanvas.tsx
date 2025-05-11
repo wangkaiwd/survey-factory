@@ -43,6 +43,7 @@ const EditorCanvas = () => {
   useEffect(() => {
     console.log('useEffect---watch')
     const { unsubscribe } = methods.watch((value: any) => {
+      console.log('update', JSON.stringify(value, null, 2))
       setQuestions([...value.questions])
     })
     return () => unsubscribe()
