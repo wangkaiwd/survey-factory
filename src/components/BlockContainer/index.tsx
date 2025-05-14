@@ -19,6 +19,7 @@ const BlockContainer = (props: TextContainerProps) => {
     }
     return cn(baseCls, 'shadow-container border-y border-l-4 border-l-blue-500', className)
   }
+
   return (
     <div ref={ref} className={getCls()} {...rest} onClick={() => setActiveQuestionId(id)}>
       {props.children}

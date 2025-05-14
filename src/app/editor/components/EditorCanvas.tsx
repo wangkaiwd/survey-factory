@@ -8,6 +8,9 @@ import { blockMap } from '@/blocks'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useQuestionStore } from '@/store/useQuestionStore'
 import { mockData } from '@/mock'
+import { rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
+import SortableContainer from '@/components/SortableContainer'
+import QuestionRenderer from '@/components/QuestionRenderer'
 
 interface FormTextStyle {
   align: AlignType
@@ -39,7 +42,6 @@ const EditorCanvas = () => {
 
   useEffect(() => {
     const { unsubscribe } = methods.watch((value: any) => {
-      console.log('update', value)
       setQuestions([...value.questions])
     })
     return () => unsubscribe()
@@ -70,10 +72,9 @@ const EditorCanvas = () => {
           id={question.id}
           ref={addBlockRef}
         >
-          <BlockComponent
-            id={question.id}
-            {...question.props}
-          />
+          <SortableContainer id={question.id} data={question}>
+            <QuestionRenderer question={question}/>
+          </SortableContainer>
         </BlockContainer>
       )
     })
@@ -113,11 +114,16 @@ const EditorCanvas = () => {
             />
           </TextContainer>
           <div className={'mt-4'}>
-            <FormProvider {...methods}>
-              <form>
-                {renderBlocks()}
-              </form>
-            </FormProvider>
+            <SortableContext
+              items={questions}
+              strategy={rectSortingStrategy}
+            >
+              <FormProvider {...methods}>
+                <form>
+                  {renderBlocks()}
+                </form>
+              </FormProvider>
+            </SortableContext>
           </div>
         </div>
       </div>
