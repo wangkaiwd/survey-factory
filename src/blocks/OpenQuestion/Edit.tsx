@@ -1,12 +1,12 @@
 import EditableText from '@/components/EditableText'
 import { MessageCircleIcon } from 'lucide-react'
-import { Input } from '@/components/ui/input'
-import { HTMLAttributes } from 'react'
+import { ComponentProps } from 'react'
 import { cn } from '@/lib/utils'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useQuestionStore } from '@/store/useQuestionStore'
+import FormInput from '@/components/FormInput'
 
-interface OpenQuestionEditProps extends HTMLAttributes<HTMLDivElement> {
+interface OpenQuestionEditProps extends ComponentProps<'div'> {
   title: string;
   placeholder: string;
   id: string;
@@ -55,7 +55,7 @@ const OpenQuestionEdit = (props: OpenQuestionEditProps) => {
       <Controller
         control={control}
         name={`questions.${activeQuestionIndex}.props.placeholder`}
-        render={({ field }) => <Input className={'mt-2'} {...field} />}
+        render={({ field }) => <FormInput className={'mt-2'} {...field} />}
       />
     </div>
   )

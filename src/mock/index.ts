@@ -11,12 +11,12 @@ export const mockData = {
     },
   },
 
-  questions: Array.from({ length: 2 }, (_, index) => ({
+  questions: Array.from({ length: 4 }, (_, index) => ({
     id: `question-${index + 1}`,
-      type: 'OpenQuestion',
-      props: {
+    type: 'OpenQuestion',
+    props: {
       title: `问答题${index + 1}`,
-        placeholder: '请输入问题',
-      },
+      placeholder: '请输入问题',
+    },
   })),
 }

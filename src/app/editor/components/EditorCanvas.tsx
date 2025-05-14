@@ -29,19 +29,17 @@ const EditorCanvas = () => {
   const blockRefs = useRef<HTMLDivElement[]>([])
   const setActiveQuestionId = useQuestionStore((state) => state.setActiveQuestionId)
   const activeQuestionId = useQuestionStore((state) => state.activeQuestionId)
+  const methods = useForm()
+
   useEffect(() => {
     setQuestions(mockData.questions)
     setPageInfo(mockData.pageInfo)
+    methods.setValue('questions', mockData.questions)
   }, [])
-
-  const methods = useForm({
-    values: {
-      questions,
-    },
-  })
 
   useEffect(() => {
     const { unsubscribe } = methods.watch((value: any) => {
+      console.log('update', value)
       setQuestions([...value.questions])
     })
     return () => unsubscribe()
@@ -81,44 +79,46 @@ const EditorCanvas = () => {
     })
   }
   return (
-    <div className={'flex-1 bg-gray-100 flex items-center justify-center py-3 h-full'}>
-      <div className={'w-[600px] bg-white rounded-md h-full py-6'}>
-        <TextContainer
-          editable={activeQuestionId === 'title-id'}
-          ref={addBlockRef}
-          onClick={() => setActiveQuestionId('title-id')}
-        >
-          <EditableText
-            value={pageInfo.title?.text}
-            align={pageInfo.title?.align}
-            placeholder={'请输入标题'}
+    <div className={'flex-1 bg-gray-100 flex justify-center py-3 h-full'}>
+      <div className={'overflow-y-auto h-full'}>
+        <div className={'w-[600px] bg-white min-h-full rounded-md py-6'}>
+          <TextContainer
             editable={activeQuestionId === 'title-id'}
-            className={'text-3xl'}
-            onChange={(textStyle) => {
-              setPageInfo({ ...pageInfo, title: textStyle as FormTextStyle })
-            }}
-          />
-        </TextContainer>
-        <TextContainer
-          editable={activeQuestionId === 'description-id'}
-          ref={addBlockRef}
-          className={'text-neutral-600'}
-          onClick={() => setActiveQuestionId('description-id')}
-        >
-          <EditableText
-            value={pageInfo.description?.text}
-            align={pageInfo.description?.align}
-            placeholder={'请输入描述'}
+            ref={addBlockRef}
+            onClick={() => setActiveQuestionId('title-id')}
+          >
+            <EditableText
+              value={pageInfo.title?.text}
+              align={pageInfo.title?.align}
+              placeholder={'请输入标题'}
+              editable={activeQuestionId === 'title-id'}
+              className={'text-3xl'}
+              onChange={(textStyle) => {
+                setPageInfo({ ...pageInfo, title: textStyle as FormTextStyle })
+              }}
+            />
+          </TextContainer>
+          <TextContainer
             editable={activeQuestionId === 'description-id'}
-            onChange={(textStyle) => { setPageInfo({ ...pageInfo, description: textStyle as FormTextStyle }) }}
-          />
-        </TextContainer>
-        <div className={'mt-4'}>
-          <FormProvider {...methods}>
-            <form>
-              {renderBlocks()}
-            </form>
-          </FormProvider>
+            ref={addBlockRef}
+            className={'text-neutral-600'}
+            onClick={() => setActiveQuestionId('description-id')}
+          >
+            <EditableText
+              value={pageInfo.description?.text}
+              align={pageInfo.description?.align}
+              placeholder={'请输入描述'}
+              editable={activeQuestionId === 'description-id'}
+              onChange={(textStyle) => { setPageInfo({ ...pageInfo, description: textStyle as FormTextStyle }) }}
+            />
+          </TextContainer>
+          <div className={'mt-4'}>
+            <FormProvider {...methods}>
+              <form>
+                {renderBlocks()}
+              </form>
+            </FormProvider>
+          </div>
         </div>
       </div>
     </div>
