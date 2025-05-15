@@ -1,10 +1,14 @@
-import { RefObject, useEffect } from 'react'
+import { useEffect } from 'react'
 
-export const useClickOutside = (targetRefs: RefObject<(Element)[]>, onClickOutSide: () => void) => {
+export const useClickOutside = (getTarget: () => Element | null | undefined, onClickOutSide: () => void) => {
   useEffect(() => {
+    // executing timing of document.addEventListener: https://stackblitz.com/edit/vitejs-vite-kwuuwfub?file=src%2FApp.tsx
     const handler = (event: MouseEvent) => {
+      const target = getTarget()
+      console.log('html', target)
+      if (!target) {return}
       const clickTarget = event.target as Element
-      const isClickInside = targetRefs.current.some(el => el.contains(clickTarget))
+      const isClickInside = target.contains(clickTarget)
       if (!isClickInside) {
         onClickOutSide()
       }
@@ -13,5 +17,5 @@ export const useClickOutside = (targetRefs: RefObject<(Element)[]>, onClickOutSi
     return () => {
       document.removeEventListener('click', handler)
     }
-  }, [targetRefs.current])
+  }, [])
 }

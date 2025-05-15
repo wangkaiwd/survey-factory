@@ -1,13 +1,12 @@
 import { cn } from '@/lib/utils'
-import React, { HTMLAttributes, Ref } from 'react'
+import React, { ComponentProps } from 'react'
 
-export interface TextContainerProps extends HTMLAttributes<HTMLDivElement> {
-  ref: Ref<HTMLDivElement>;
+export interface TextContainerProps extends ComponentProps<'div'> {
   editable?: boolean;
 }
 
 const TextContainer = (props: TextContainerProps) => {
-  const { ref, className, editable = false, ...rest } = props
+  const { className, editable = false, ...rest } = props
   const getCls = () => {
     const base = 'px-10'
     if (!editable) {return cn(base) }
@@ -19,7 +18,7 @@ const TextContainer = (props: TextContainerProps) => {
     }
   }
   return (
-    <div ref={ref} className={getCls()} {...rest} >
+    <div className={getCls()} {...rest} >
       <div className={getInnerCls()}>
         {props.children}
       </div>

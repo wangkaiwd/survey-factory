@@ -29,7 +29,7 @@ const EditorCanvas = () => {
   const setPageInfo = useQuestionStore((state) => state.setPageInfo)
   const questions = useQuestionStore((state) => state.questions)
   const pageInfo = useQuestionStore((state) => state.pageInfo)
-  const blockRefs = useRef<HTMLDivElement[]>([])
+  const questionRefs = useRef<Record<string, Element>>({})
   const setActiveQuestionId = useQuestionStore((state) => state.setActiveQuestionId)
   const activeQuestionId = useQuestionStore((state) => state.activeQuestionId)
   const methods = useForm()
@@ -47,18 +47,13 @@ const EditorCanvas = () => {
     return () => unsubscribe()
   }, [methods.watch])
 
-  useClickOutside(blockRefs, () => {
+  useClickOutside(() => {
+    if (questionRefs.current && activeQuestionId) {
+      return questionRefs.current[activeQuestionId]
+    }
+  }, () => {
     setActiveQuestionId(null)
   })
-  const addBlockRef = (el: HTMLDivElement | null) => {
-    if (!el) {return}
-    const index = blockRefs.current.indexOf(el)
-    if (index === -1) {
-      blockRefs.current.push(el)
-    } else {
-      blockRefs.current[index] = el
-    }
-  }
 
   const renderBlocks = () => {
     return questions.map((question) => {
@@ -70,7 +65,7 @@ const EditorCanvas = () => {
         <BlockContainer
           key={question.id}
           id={question.id}
-          ref={addBlockRef}
+          ref={(el) => addQuestionRef(el, question.id)}
         >
           <SortableContainer id={question.id} data={question}>
             <QuestionRenderer question={question}/>
@@ -79,14 +74,22 @@ const EditorCanvas = () => {
       )
     })
   }
+  const addQuestionRef = (el: HTMLDivElement | null, id: string) => {
+    if (el) {
+      questionRefs.current[id] = el
+    }
+  }
+  console.log('blockRef', questionRefs.current)
   return (
     <div className={'flex-1 bg-gray-100 flex justify-center py-3 h-full'}>
       <div className={'overflow-y-auto h-full'}>
         <div className={'w-[600px] bg-white min-h-full rounded-md py-6'}>
           <TextContainer
+            ref={(el) => addQuestionRef(el, 'title-id')}
             editable={activeQuestionId === 'title-id'}
-            ref={addBlockRef}
-            onClick={() => setActiveQuestionId('title-id')}
+            onClick={() => {
+              setActiveQuestionId('title-id')
+            }}
           >
             <EditableText
               value={pageInfo.title?.text}
@@ -100,10 +103,12 @@ const EditorCanvas = () => {
             />
           </TextContainer>
           <TextContainer
+            ref={(el) => addQuestionRef(el, 'description-id')}
             editable={activeQuestionId === 'description-id'}
-            ref={addBlockRef}
             className={'text-neutral-600'}
-            onClick={() => setActiveQuestionId('description-id')}
+            onClick={() => {
+              setActiveQuestionId('description-id')
+            }}
           >
             <EditableText
               value={pageInfo.description?.text}

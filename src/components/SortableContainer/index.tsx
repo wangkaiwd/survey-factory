@@ -1,6 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import React from 'react'
+import { GripHorizontal } from 'lucide-react'
 
 interface SortableContainerProps {
   id: string | number
@@ -26,7 +27,10 @@ const SortableContainer = ({ id, data, children }: SortableContainerProps) => {
     opacity: isDragging ? 0.5 : 1,
   }
   return (
-    <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
+    <div ref={setNodeRef} {...attributes} style={style} className={'group'}>
+      <div className={'flex items-center justify-center'}>
+        <GripHorizontal {...listeners} className={'cursor-pointer group-hover:invisible'}/>
+      </div>
       {children}
     </div>
   )
