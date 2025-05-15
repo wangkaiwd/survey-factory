@@ -1,4 +1,4 @@
-import OpenQuestion, { OpenQuestionProps } from '@/blocks/OpenQuestion'
+import OpenQuestion, { OpenQuestionProps } from '@/questions/OpenQuestion'
 import { FC } from 'react'
 
 // todo: plugin system

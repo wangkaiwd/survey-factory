@@ -32,9 +32,8 @@ const Editor = () => {
     const { active, over } = event
     if (!over) {return}
     if (active.id !== over.id) {
-      const oldIndex = questions.indexOf(active.id)
-      const newIndex = questions.indexOf(over.id)
-      console.log('move', active, over)
+      const oldIndex = questions.findIndex((item) => item.id === active.id)
+      const newIndex = questions.findIndex((item) => item.id === over.id)
       setQuestions(arrayMove(questions, oldIndex, newIndex))
     }
   }
@@ -72,12 +71,12 @@ const Editor = () => {
   // }
 
   // todo: simply drag and drop interactive
-  const renderOverlay = () => {
-    // if (!dragItem?.data?.current) {
-    //   return
-    // }
-    return <div className={'border'}>overlay</div>
-  }
+  // const renderOverlay = () => {
+  //   // if (!dragItem?.data?.current) {
+  //   //   return
+  //   // }
+  //   return <div className={'border'}>overlay</div>
+  // }
 
   return (
     <div className="flex h-full">
@@ -92,9 +91,9 @@ const Editor = () => {
         <EditorLeftPanel/>
         <EditorCanvas/>
         <EditorSettingPanel/>
-        <DragOverlay>
+        {/*<DragOverlay>
           {renderOverlay()}
-        </DragOverlay>
+        </DragOverlay>*/}
       </DndContext>
 
     </div>

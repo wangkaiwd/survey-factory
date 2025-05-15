@@ -1,4 +1,4 @@
-import { blockMap } from '@/blocks'
+import { blockMap } from '../../questions'
 import React from 'react'
 
 interface QuestionRendererProps {

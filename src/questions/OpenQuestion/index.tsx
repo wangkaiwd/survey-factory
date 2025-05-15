@@ -1,7 +1,8 @@
 import { HTMLAttributes } from 'react'
-import OpenQuestionEdit from '@/blocks/OpenQuestion/Edit'
-import OpenQuestionPreview from '@/blocks/OpenQuestion/Preview'
+import { cn } from '@/lib/utils'
 import { useQuestionStore } from '@/store/useQuestionStore'
+import OpenQuestionEdit from './Edit';
+import OpenQuestionPreview from '@/questions/OpenQuestion/Preview'
 
 export interface OpenQuestionProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
@@ -14,15 +15,15 @@ const OpenQuestion = (props: OpenQuestionProps) => {
   const { id, title, placeholder, ...restProps } = props
   const activeQuestionId = useQuestionStore((state) => state.activeQuestionId)
   const editable = activeQuestionId === id
-  const renderChildren = () => {
-    if (editable) {
-      return <OpenQuestionEdit title={title} id={id} placeholder={placeholder}/>
-    }
-    return <OpenQuestionPreview title={title} placeholder={placeholder}/>
-  }
   return (
     <div {...restProps}>
-      {renderChildren()}
+      <OpenQuestionEdit
+        title={title}
+        id={id}
+        className={cn({ 'hidden': !editable })}
+        placeholder={placeholder}
+      />
+      <OpenQuestionPreview className={cn({ 'hidden': editable })} title={title} placeholder={placeholder}/>
     </div>
   )
 }

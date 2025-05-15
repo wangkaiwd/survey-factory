@@ -4,7 +4,7 @@ import EditableText, { AlignType } from '@/components/EditableText'
 import { useClickOutside } from '@/hooks/useClickOutside'
 import TextContainer from '@/components/TextContainer'
 import BlockContainer from '@/components/BlockContainer'
-import { blockMap } from '@/blocks'
+import { blockMap } from '@/questions'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useQuestionStore } from '@/store/useQuestionStore'
 import { mockData } from '@/mock'
@@ -79,7 +79,6 @@ const EditorCanvas = () => {
       questionRefs.current[id] = el
     }
   }
-  console.log('blockRef', questionRefs.current)
   return (
     <div className={'flex-1 bg-gray-100 flex justify-center py-3 h-full'}>
       <div className={'overflow-y-auto h-full'}>

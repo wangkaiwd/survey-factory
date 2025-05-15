@@ -20,6 +20,7 @@ const BlockContainer = (props: TextContainerProps) => {
   }
 
   const onClick = () => {
+    console.log('setState')
     setActiveQuestionId(id)
   }
   return (

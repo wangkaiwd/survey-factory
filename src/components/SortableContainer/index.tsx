@@ -28,8 +28,8 @@ const SortableContainer = ({ id, data, children }: SortableContainerProps) => {
   }
   return (
     <div ref={setNodeRef} {...attributes} style={style} className={'group'}>
-      <div className={'flex items-center justify-center'}>
-        <GripHorizontal {...listeners} className={'cursor-pointer group-hover:invisible'}/>
+      <div className={'flex items-center justify-center mb-1'}>
+        <GripHorizontal {...listeners} className={'cursor-pointer invisible group-hover:visible text-gray-400'}/>
       </div>
       {children}
     </div>
