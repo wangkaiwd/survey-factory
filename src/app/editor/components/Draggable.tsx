@@ -19,7 +19,7 @@ const Draggable = ({
     id,
     data: {
       type: 'draggable',
-      ...data,
+      context: data
     },
   })
   return (

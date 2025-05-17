@@ -1,13 +1,11 @@
 'use client'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import EditableText, { AlignType } from '@/components/EditableText'
 import { useClickOutside } from '@/hooks/useClickOutside'
 import TextContainer from '@/components/TextContainer'
 import BlockContainer from '@/components/BlockContainer'
 import { blockMap } from '@/questions'
-import { FormProvider, useForm } from 'react-hook-form'
 import { useQuestionStore } from '@/store/useQuestionStore'
-import { mockData } from '@/mock'
 import { rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import SortableContainer from '@/components/SortableContainer'
 import QuestionRenderer from '@/components/QuestionRenderer'
@@ -25,27 +23,12 @@ interface FormTextStyle {
 // }
 
 const EditorCanvas = () => {
-  const setQuestions = useQuestionStore((state) => state.setQuestions)
   const setPageInfo = useQuestionStore((state) => state.setPageInfo)
   const questions = useQuestionStore((state) => state.questions)
   const pageInfo = useQuestionStore((state) => state.pageInfo)
   const questionRefs = useRef<Record<string, Element>>({})
   const setActiveQuestionId = useQuestionStore((state) => state.setActiveQuestionId)
   const activeQuestionId = useQuestionStore((state) => state.activeQuestionId)
-  const methods = useForm()
-
-  useEffect(() => {
-    setQuestions(mockData.questions)
-    setPageInfo(mockData.pageInfo)
-    methods.setValue('questions', mockData.questions)
-  }, [])
-
-  useEffect(() => {
-    const { unsubscribe } = methods.watch((value: any) => {
-      setQuestions([...value.questions])
-    })
-    return () => unsubscribe()
-  }, [methods.watch])
 
   useClickOutside(() => {
     if (questionRefs.current && activeQuestionId) {
@@ -62,15 +45,14 @@ const EditorCanvas = () => {
         return null
       }
       return (
-        <BlockContainer
-          key={question.id}
-          id={question.id}
-          ref={(el) => addQuestionRef(el, question.id)}
-        >
-          <SortableContainer id={question.id} data={question}>
+        <SortableContainer id={question.id} key={question.id} data={question}>
+          <BlockContainer
+            id={question.id}
+            ref={(el) => addQuestionRef(el, question.id)}
+          >
             <QuestionRenderer question={question}/>
-          </SortableContainer>
-        </BlockContainer>
+          </BlockContainer>
+        </SortableContainer>
       )
     })
   }
@@ -87,7 +69,9 @@ const EditorCanvas = () => {
             ref={(el) => addQuestionRef(el, 'title-id')}
             editable={activeQuestionId === 'title-id'}
             onClick={() => {
-              setActiveQuestionId('title-id')
+              setTimeout(() => {
+                setActiveQuestionId('title-id')
+              })
             }}
           >
             <EditableText
@@ -106,7 +90,9 @@ const EditorCanvas = () => {
             editable={activeQuestionId === 'description-id'}
             className={'text-neutral-600'}
             onClick={() => {
-              setActiveQuestionId('description-id')
+              setTimeout(() => {
+                setActiveQuestionId('description-id')
+              })
             }}
           >
             <EditableText
@@ -122,11 +108,9 @@ const EditorCanvas = () => {
               items={questions}
               strategy={rectSortingStrategy}
             >
-              <FormProvider {...methods}>
-                <form>
-                  {renderBlocks()}
-                </form>
-              </FormProvider>
+              <form>
+                {renderBlocks()}
+              </form>
             </SortableContext>
           </div>
         </div>

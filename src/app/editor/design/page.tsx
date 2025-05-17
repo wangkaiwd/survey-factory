@@ -4,18 +4,46 @@ import EditorLeftPanel from '@/app/editor/components/EditorLeftPanel'
 import EditorCanvas from '@/app/editor/components/EditorCanvas'
 import EditorSettingPanel from '@/app/editor/components/EditorSettingPanel'
 import {
-  DndContext, DragEndEvent,
-  DragOverEvent, DragOverlay, DragStartEvent, KeyboardSensor, PointerSensor, rectIntersection, useSensor, useSensors,
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  KeyboardSensor,
+  PointerSensor,
+  rectIntersection,
+  useSensor,
+  useSensors,
 } from '@dnd-kit/core'
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { useEffect, useState } from 'react'
 import { useQuestionStore } from '@/store/useQuestionStore'
 import QuestionRenderer from '@/components/QuestionRenderer'
+import { FormProvider, useForm } from 'react-hook-form'
+import { mockData } from '@/mock'
+import Draggable from '@/app/editor/components/Draggable'
+import QuestionItem from '@/components/QuestionItem'
 
 const Editor = () => {
   const questions = useQuestionStore((state) => state.questions)
   const setQuestions = useQuestionStore((state) => state.setQuestions)
+  const setPageInfo = useQuestionStore((state) => state.setPageInfo)
   const [dragItem, setDragItem] = useState<any>(null)
+
+  const methods = useForm()
+
+  useEffect(() => {
+    setQuestions(mockData.questions)
+    setPageInfo(mockData.pageInfo)
+    methods.setValue('questions', mockData.questions)
+  }, [])
+
+  useEffect(() => {
+    const { unsubscribe } = methods.watch((value: any) => {
+      setQuestions([...value.questions])
+    })
+    return () => unsubscribe()
+  }, [methods.watch])
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -24,7 +52,6 @@ const Editor = () => {
   )
 
   const onDragStart = (event: DragStartEvent) => {
-    console.log('event', event.active)
     setDragItem(event.active)
   }
 
@@ -34,7 +61,10 @@ const Editor = () => {
     if (active.id !== over.id) {
       const oldIndex = questions.findIndex((item) => item.id === active.id)
       const newIndex = questions.findIndex((item) => item.id === over.id)
-      setQuestions(arrayMove(questions, oldIndex, newIndex))
+      const newQuestions = arrayMove(questions, oldIndex, newIndex)
+      setQuestions(newQuestions)
+      // 移动位置后，重新设置表单value ?
+      methods.setValue('questions', newQuestions)
     }
   }
 
@@ -70,13 +100,22 @@ const Editor = () => {
   //   }
   // }
 
-  // todo: simply drag and drop interactive
-  // const renderOverlay = () => {
-  //   // if (!dragItem?.data?.current) {
-  //   //   return
-  //   // }
-  //   return <div className={'border'}>overlay</div>
-  // }
+  const renderOverlay = () => {
+    if (!dragItem?.data?.current) {
+      return
+    }
+    const { context, type } = dragItem.data.current
+    if (type === 'draggable') {
+      return (
+        <Draggable id={context.id}>
+          <QuestionItem icon={context.icon} label={context.label}/>
+        </Draggable>
+      )
+    }
+    return (
+      <QuestionRenderer question={context}/>
+    )
+  }
 
   return (
     <div className="flex h-full">
@@ -89,11 +128,14 @@ const Editor = () => {
         sensors={sensors}
       >
         <EditorLeftPanel/>
-        <EditorCanvas/>
+        <FormProvider {...methods}>
+          <EditorCanvas/>
+          <DragOverlay>
+            {renderOverlay()}
+          </DragOverlay>
+        </FormProvider>
         <EditorSettingPanel/>
-        {/*<DragOverlay>
-          {renderOverlay()}
-        </DragOverlay>*/}
+
       </DndContext>
 
     </div>

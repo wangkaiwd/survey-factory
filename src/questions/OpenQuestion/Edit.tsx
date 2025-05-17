@@ -34,18 +34,20 @@ const OpenQuestionEdit = (props: OpenQuestionEditProps) => {
       <div className={'flex items-center justify-between'}>
         <Controller
           name={`questions.${activeQuestionIndex}.props.title`}
-          render={({ field }) => (
-            <EditableText
-              {...field}
-              editable={editable}
-              wrapperClassName={'flex-1'}
-              className={'text-lg'}
-              placeholder={'单选题'}
-              onChange={(textStyle) => {
-                field.onChange(textStyle.text)
-              }}
-            />
-          )}
+          render={({ field }) => {
+            return (
+              <EditableText
+                {...field}
+                editable={editable}
+                wrapperClassName={'flex-1'}
+                className={'text-lg'}
+                placeholder={'单选题'}
+                onChange={(textStyle) => {
+                  field.onChange(textStyle.text)
+                }}
+              />
+            )
+          }}
           control={control}
         />
         <div className={'inline-flex items-center justify-between py-1 px-2 rounded-sm text-sm bg-gray-100 ml-3'}>

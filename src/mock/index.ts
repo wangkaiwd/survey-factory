@@ -11,8 +11,8 @@ export const mockData = {
     },
   },
 
-  questions: Array.from({ length: 4 }, (_, index) => ({
-    id: `question-${index + 1}`,
+  questions: Array.from({ length: 2 }, (_, index) => ({
+    id: crypto.randomUUID(),
     type: 'OpenQuestion',
     props: {
       title: `问答题${index + 1}`,
