@@ -5,7 +5,7 @@ import EditorCanvas from '@/app/editor/components/EditorCanvas'
 import EditorSettingPanel from '@/app/editor/components/EditorSettingPanel'
 import {
   DndContext,
-  DragEndEvent,
+  DragEndEvent, DragOverEvent,
   DragOverlay,
   DragStartEvent,
   KeyboardSensor,
@@ -55,50 +55,43 @@ const Editor = () => {
     setDragItem(event.active)
   }
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const onDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
+    setDragItem(null)
+    const activeItem = questions.find((item) => item.id === active.id)
+    if (activeItem) {
+      activeItem.id = crypto.randomUUID()
+      setQuestions([...questions])
+      methods.setValue('questions', [...questions])
+    }
     if (!over) {return}
-    if (active.id !== over.id) {
-      const oldIndex = questions.findIndex((item) => item.id === active.id)
-      const newIndex = questions.findIndex((item) => item.id === over.id)
-      const newQuestions = arrayMove(questions, oldIndex, newIndex)
+  }
+
+  const onDragOver = (event: DragOverEvent) => {
+    const { active, over } = event
+    // 移动进入列表，又移出列表
+    if (!over) {
+      // 左侧拖拽的组件移出时才会删除，列表中原有组件移动不删除
+      if (dragItem.data.current?.type === 'draggable') {
+        const newQuestions = questions.filter((item) => item.id !== active.id)
+        setQuestions(newQuestions)
+        methods.setValue('questions', newQuestions)
+      }
+      return
+    }
+    // 移入到列表中
+    // 1. 如果列表中有该元素，更新位置
+    const activeIndex = questions.findIndex((item) => item.id === active.id)
+    const overIndex = questions.findIndex((item) => item.id === over.id)
+    if (activeIndex !== -1) {
+      setQuestions(arrayMove(questions, activeIndex, overIndex))
+    } else { // 2. 如果列表中没有该元素，插入到移入的位置
+      const newQuestion = { id: active.id, type: 'OpenQuestion', props: { title: '问答题', placeholder: '请输入内容' } }
+      const newQuestions = [...questions, newQuestion]
       setQuestions(newQuestions)
-      // 移动位置后，重新设置表单value ?
       methods.setValue('questions', newQuestions)
     }
   }
-
-  // const onDragEnd = (event: DragEndEvent) => {
-  //   const { over } = event
-  //   setActiveItem(null)
-  //   if (!over) {return}
-  //   // 如果需要，更新新加入元素的数据
-  // }
-  // const onDragOver = (event: DragOverEvent) => {
-  //   const { active, over } = event
-  //   // 移动进入列表，又移出列表
-  //   if (!over) {
-  //     // 左侧拖拽的组件移出时才会删除，列表中原有组件移动不删除
-  //     if (activeItem.data.current?.type === 'draggable') {
-  //       const newItems = questions.filter((item) => item.id !== active.id)
-  //       setQuestions(newItems)
-  //     }
-  //     return
-  //   }
-  //   // 移入到列表中
-  //   // 1. 如果列表中有该元素，更新位置
-  //   const activeIndex = questions.findIndex((item) => item.id === active.id)
-  //   const overIndex = questions.findIndex((item) => item.id === over.id)
-  //   if (activeIndex !== -1) {
-  //     setQuestions(arrayMove(questions, activeIndex, overIndex))
-  //   } else { // 2. 如果列表中没有该元素，插入到移入的位置
-  //     const newQuestion = { id: active.id, type: 'OpenQuestion', props: { title: '问答题', placeholder: '请输入内容' } }
-  //     setQuestions(
-  //       [...questions, newQuestion],
-  //     )
-  //     // setDragId(genId)
-  //   }
-  // }
 
   const renderOverlay = () => {
     if (!dragItem?.data?.current) {
@@ -121,9 +114,8 @@ const Editor = () => {
     <div className="flex h-full">
       <DndContext
         onDragStart={onDragStart}
-        // onDragOver={onDragOver}
-        // onDragEnd={onDragEnd}
-        onDragEnd={handleDragEnd}
+        onDragOver={onDragOver}
+        onDragEnd={onDragEnd}
         collisionDetection={rectIntersection}
         sensors={sensors}
       >
