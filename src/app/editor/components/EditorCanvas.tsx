@@ -1,14 +1,19 @@
 'use client'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import EditableText, { AlignType } from '@/components/EditableText'
 import { useClickOutside } from '@/hooks/useClickOutside'
 import TextContainer from '@/components/TextContainer'
 import BlockContainer from '@/components/BlockContainer'
 import { blockMap } from '@/questions'
 import { useQuestionStore } from '@/store/useQuestionStore'
-import { rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import SortableContainer from '@/components/SortableContainer'
 import QuestionRenderer from '@/components/QuestionRenderer'
+import { FormProvider, useForm } from 'react-hook-form'
+import { mockData } from '@/mock'
+import DnDItem from '@/components/SmoothDnD/DnDItem'
+import DnDContainer from '@/components/SmoothDnD/DnDContainer'
+import { applyDrag } from '@/lib/utils'
+import { DND_GROUP_NAME } from '@/lib/constants'
 
 interface FormTextStyle {
   align: AlignType
@@ -24,11 +29,28 @@ interface FormTextStyle {
 
 const EditorCanvas = () => {
   const setPageInfo = useQuestionStore((state) => state.setPageInfo)
+  const setQuestions = useQuestionStore((state) => state.setQuestions)
   const questions = useQuestionStore((state) => state.questions)
   const pageInfo = useQuestionStore((state) => state.pageInfo)
   const questionRefs = useRef<Record<string, Element>>({})
   const setActiveQuestionId = useQuestionStore((state) => state.setActiveQuestionId)
+
   const activeQuestionId = useQuestionStore((state) => state.activeQuestionId)
+
+  const methods = useForm()
+
+  useEffect(() => {
+    setQuestions(mockData.questions)
+    setPageInfo(mockData.pageInfo)
+    methods.setValue('questions', mockData.questions)
+  }, [])
+
+  useEffect(() => {
+    const { unsubscribe } = methods.watch((value: any) => {
+      setQuestions([...value.questions])
+    })
+    return () => unsubscribe()
+  }, [methods.watch])
 
   useClickOutside(() => {
     if (questionRefs.current && activeQuestionId) {
@@ -45,14 +67,14 @@ const EditorCanvas = () => {
         return null
       }
       return (
-        <SortableContainer id={question.id} key={question.id} data={question}>
+        <DnDItem key={question.id}>
           <BlockContainer
             id={question.id}
             ref={(el) => addQuestionRef(el, question.id)}
           >
             <QuestionRenderer question={question}/>
           </BlockContainer>
-        </SortableContainer>
+        </DnDItem>
       )
     })
   }
@@ -104,14 +126,33 @@ const EditorCanvas = () => {
             />
           </TextContainer>
           <div className={'mt-4'}>
-            <SortableContext
-              items={questions}
-              strategy={rectSortingStrategy}
-            >
+            <FormProvider {...methods}>
               <form>
-                {renderBlocks()}
+                <DnDContainer
+                  dragHandleSelector={'.question-drag-handle'}
+                  groupName={DND_GROUP_NAME}
+                  dropPlaceholder={{ className: 'bg-gray-100' }}
+                  getChildPayload={(i) => questions[i]}
+                  onDrop={(e) => {
+                    const newQuestions = applyDrag(questions, e, (payload) => {
+                      const { type } = payload
+                      return {
+                        id: crypto.randomUUID(),
+                        type,
+                        props: {
+                          title: '标题',
+                          placeholder: '请输入问题',
+                        },
+                      }
+                    })
+                    setQuestions(newQuestions)
+                    methods.setValue('questions', newQuestions)
+                  }}
+                >
+                  {renderBlocks()}
+                </DnDContainer>
               </form>
-            </SortableContext>
+            </FormProvider>
           </div>
         </div>
       </div>
