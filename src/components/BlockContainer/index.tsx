@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import React, { ComponentProps } from 'react'
-import { useQuestionStore } from '@/store/useQuestionStore'
+import { useQuestionStore, useQuestionStoreActions } from '@/store/useQuestionStore'
 import { GripHorizontal } from 'lucide-react'
 
 export interface TextContainerProps extends ComponentProps<'div'> {
@@ -9,7 +9,7 @@ export interface TextContainerProps extends ComponentProps<'div'> {
 
 const BlockContainer = (props: TextContainerProps) => {
   const { className, id, ...rest } = props
-  const setActiveQuestionId = useQuestionStore((state) => state.setActiveQuestionId)
+  const { setActiveQuestionId } = useQuestionStoreActions()
   const activeQuestionId = useQuestionStore((state) => state.activeQuestionId)
   const editable = activeQuestionId === id
   const getCls = () => {

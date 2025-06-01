@@ -5,8 +5,7 @@ import { useClickOutside } from '@/hooks/useClickOutside'
 import TextContainer from '@/components/TextContainer'
 import BlockContainer from '@/components/BlockContainer'
 import { blockMap } from '@/questions'
-import { useQuestionStore } from '@/store/useQuestionStore'
-import SortableContainer from '@/components/SortableContainer'
+import { useQuestionStore, useQuestionStoreActions } from '@/store/useQuestionStore'
 import QuestionRenderer from '@/components/QuestionRenderer'
 import { FormProvider, useForm } from 'react-hook-form'
 import { mockData } from '@/mock'
@@ -28,12 +27,10 @@ interface FormTextStyle {
 // }
 
 const EditorCanvas = () => {
-  const setPageInfo = useQuestionStore((state) => state.setPageInfo)
-  const setQuestions = useQuestionStore((state) => state.setQuestions)
+  const { setPageInfo, setQuestions, setActiveQuestionId } = useQuestionStoreActions()
   const questions = useQuestionStore((state) => state.questions)
   const pageInfo = useQuestionStore((state) => state.pageInfo)
   const questionRefs = useRef<Record<string, Element>>({})
-  const setActiveQuestionId = useQuestionStore((state) => state.setActiveQuestionId)
 
   const activeQuestionId = useQuestionStore((state) => state.activeQuestionId)
 

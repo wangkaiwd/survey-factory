@@ -36,7 +36,7 @@ const DnDContainer = (props: DnDContainerProps) => {
     return () => {
       instance.dispose()
     }
-  }, [options])
+  }, [dndContainerRef.current, options])
 
   return (
     <div ref={dndContainerRef} className={className} style={style}>
