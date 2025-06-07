@@ -31,6 +31,7 @@ const EditorCanvas = () => {
   const questions = useQuestionStore((state) => state.questions)
   const pageInfo = useQuestionStore((state) => state.pageInfo)
   const questionRefs = useRef<Record<string, Element>>({})
+  const draggingRef = useRef<boolean>(false)
 
   const activeQuestionId = useQuestionStore((state) => state.activeQuestionId)
 
@@ -54,15 +55,13 @@ const EditorCanvas = () => {
       return questionRefs.current[activeQuestionId]
     }
   }, () => {
-    setActiveQuestionId(null)
+    if (!draggingRef.current) {
+      setActiveQuestionId(null)
+    }
   })
 
   const renderBlocks = () => {
     return questions.map((question) => {
-      const BlockComponent = blockMap.get(question.type)
-      if (!BlockComponent) {
-        return null
-      }
       return (
         <DnDItem key={question.id}>
           <BlockContainer
@@ -81,7 +80,7 @@ const EditorCanvas = () => {
     }
   }
   return (
-    <div className={'flex-1 bg-gray-100 flex justify-center py-3 h-full'}>
+    <div className={'flex-1 flex justify-center py-3 h-full'}>
       <div className={'overflow-y-auto h-full'}>
         <div className={'w-[600px] bg-white min-h-full rounded-md py-6'}>
           <TextContainer
@@ -126,6 +125,12 @@ const EditorCanvas = () => {
             <FormProvider {...methods}>
               <form>
                 <DnDContainer
+                  onDragStart={() => {
+                    draggingRef.current = true
+                  }}
+                  onDragEnd={() => {
+                    draggingRef.current = false
+                  }}
                   dragHandleSelector={'.question-drag-handle'}
                   groupName={DND_GROUP_NAME}
                   dropPlaceholder={{ className: 'bg-gray-100' }}

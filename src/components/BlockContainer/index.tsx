@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import React, { ComponentProps } from 'react'
+import React, { ComponentProps, useState } from 'react'
 import { useQuestionStore, useQuestionStoreActions } from '@/store/useQuestionStore'
 import { GripHorizontal } from 'lucide-react'
 
@@ -11,13 +11,13 @@ const BlockContainer = (props: TextContainerProps) => {
   const { className, id, ...rest } = props
   const { setActiveQuestionId } = useQuestionStoreActions()
   const activeQuestionId = useQuestionStore((state) => state.activeQuestionId)
-  const editable = activeQuestionId === id
+  const isActive = activeQuestionId === id
   const getCls = () => {
     const baseCls = ['px-10 py-3 pb-6 group bg-white']
-    if (!editable) {
+    if (!isActive) {
       return cn(baseCls, 'hover:shadow-container hover:border-y', className)
     }
-    return cn(baseCls, 'shadow-container border-y border-l-4 border-l-blue-500', className)
+    return cn(baseCls, 'shadow-container border-y', className)
   }
 
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
