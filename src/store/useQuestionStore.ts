@@ -14,7 +14,7 @@ interface QuestionStoreState {
   actions: QuestionStoreActions
 }
 
-export const useQuestionStore = create<QuestionStoreState>()((set, get) => {
+export const useQuestionStore = create<QuestionStoreState>()((set) => {
   return {
     questions: [],
     pageInfo: {},

@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import React, { ComponentProps, useState } from 'react'
+import React, { ComponentProps } from 'react'
 import { useQuestionStore, useQuestionStoreActions } from '@/store/useQuestionStore'
 import { GripHorizontal } from 'lucide-react'
 
