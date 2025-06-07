@@ -1,69 +1,67 @@
 'use client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+import { Form } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
-import { Switch } from '@/components/ui/switch'
-
-const formItemBaseCls = 'flex justify-between'
-const formLabelBaseCls = 'w-20'
+import { useQuestionStore, useQuestionStoreActions } from '@/store/useQuestionStore'
+import { useEffect } from 'react'
+import { debounce } from 'lodash-es'
+import { useLatest } from '@/hooks/useLatest'
+import OpenQuestionSetting from '@/questions/OpenQuestion/OpenQuestionSetting'
 
 const EditorSettingPanel = () => {
-  const form = useForm()
-  return (
-    <Card className="w-80 h-full">
-      <CardHeader>
-        <CardTitle>题目设置</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form>
-            <div className={'space-y-4'}>
-              <FormField
-                control={form.control}
-                name="required"
-                render={({ field }) => (
-                  <FormItem className={formItemBaseCls}>
-                    <FormLabel className={formLabelBaseCls}>必填</FormLabel>
-                    <FormControl>
-                      <Switch
+  const question = useQuestionStore((state) => {
+    const { activeQuestionId, questions } = state
+    if (!activeQuestionId) return null
+    return questions.find((q) => q.id === activeQuestionId)
+  })
+  const questionRef = useLatest(question)
 
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem className={formItemBaseCls}>
-                    <FormLabel className={formLabelBaseCls}>标题</FormLabel>
-                    <FormControl>
-                      <Input placeholder="请输入标题" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="placeholder"
-                render={({ field }) => (
-                  <FormItem className={formItemBaseCls}>
-                    <FormLabel className={formLabelBaseCls}>提示文字</FormLabel>
-                    <FormControl>
-                      <Input placeholder="请输入提示文字" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+  const { updateQuestion } = useQuestionStoreActions()
+
+  // form change will update twice: form change trigger question update, then trigger values change
+  const form = useForm({
+    values: question?.props,
+  })
+
+  useEffect(() => {
+    const cleanup = form.subscribe({
+      formState: {
+        values: true,
+      },
+      callback: debounce(({ values }) => {
+        updateQuestion({
+          ...questionRef.current,
+          props: values,
+        })
+      }, 800),
+    })
+    return () => cleanup()
+  }, [form.subscribe])
+
+  const childrenRenderer = () => {
+    if (!question) {
+      return null
+    }
+    return (
+      <Card className="w-full h-full">
+        <CardHeader>
+          <CardTitle>题目设置</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form>
+              <OpenQuestionSetting/>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+
+    )
+  }
+  return (
+    <div className="w-80 h-full">
+      {childrenRenderer()}
+    </div>
   )
 }
 

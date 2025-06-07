@@ -4,6 +4,7 @@ interface QuestionStoreActions {
   setQuestions: (questions: any[]) => void
   setPageInfo: (pageInfo: any) => void
   setActiveQuestionId: (id: string | null) => void
+  updateQuestion: (question: any) => void
 }
 
 interface QuestionStoreState {
@@ -13,29 +14,29 @@ interface QuestionStoreState {
   actions: QuestionStoreActions
 }
 
-export const useQuestionStore = create<QuestionStoreState>()((set) => {
+export const useQuestionStore = create<QuestionStoreState>()((set, get) => {
   return {
     questions: [],
     pageInfo: {},
     activeQuestionId: null,
     actions: {
       setQuestions: (questions: any[]) => {
-        set((state) => ({
-          ...state,
-          questions,
-        }))
+        set(() => ({ questions }))
       },
       setPageInfo: (pageInfo: any) => {
-        set((state) => ({
-          ...state,
-          pageInfo,
-        }))
+        set(() => ({ pageInfo }))
       },
       setActiveQuestionId: (id: string | null) => {
-        set((state) => ({
-          ...state,
-          activeQuestionId: id,
-        }))
+        set(() => ({ activeQuestionId: id }))
+      },
+      updateQuestion: (question: any) => {
+        const { id } = question
+        set((state) => {
+          const questions = state.questions.map((q) =>
+            q.id === id ? question : q,
+          )
+          return { questions }
+        })
       },
     },
   }

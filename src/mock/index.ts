@@ -17,6 +17,7 @@ export const mockData = {
     props: {
       title: `问答题${index + 1}`,
       placeholder: '请输入问题',
+      required: false,
     },
   })),
 }

@@ -1,10 +1,8 @@
 'use client'
 import React, { useEffect, useRef } from 'react'
 import EditableText, { AlignType } from '@/components/EditableText'
-import { useClickOutside } from '@/hooks/useClickOutside'
 import TextContainer from '@/components/TextContainer'
 import BlockContainer from '@/components/BlockContainer'
-import { blockMap } from '@/questions'
 import { useQuestionStore, useQuestionStoreActions } from '@/store/useQuestionStore'
 import QuestionRenderer from '@/components/QuestionRenderer'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -31,7 +29,6 @@ const EditorCanvas = () => {
   const questions = useQuestionStore((state) => state.questions)
   const pageInfo = useQuestionStore((state) => state.pageInfo)
   const questionRefs = useRef<Record<string, Element>>({})
-  const draggingRef = useRef<boolean>(false)
 
   const activeQuestionId = useQuestionStore((state) => state.activeQuestionId)
 
@@ -49,16 +46,6 @@ const EditorCanvas = () => {
     })
     return () => unsubscribe()
   }, [methods.watch])
-
-  useClickOutside(() => {
-    if (questionRefs.current && activeQuestionId) {
-      return questionRefs.current[activeQuestionId]
-    }
-  }, () => {
-    if (!draggingRef.current) {
-      setActiveQuestionId(null)
-    }
-  })
 
   const renderBlocks = () => {
     return questions.map((question) => {
@@ -125,12 +112,6 @@ const EditorCanvas = () => {
             <FormProvider {...methods}>
               <form>
                 <DnDContainer
-                  onDragStart={() => {
-                    draggingRef.current = true
-                  }}
-                  onDragEnd={() => {
-                    draggingRef.current = false
-                  }}
                   dragHandleSelector={'.question-drag-handle'}
                   groupName={DND_GROUP_NAME}
                   dropPlaceholder={{ className: 'bg-gray-100' }}
