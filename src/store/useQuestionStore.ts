@@ -5,10 +5,12 @@ interface QuestionStoreActions {
   setPageInfo: (pageInfo: any) => void
   setActiveQuestionId: (id: string | null) => void
   updateQuestion: (question: any) => void
+  setDragging: (isDragging: boolean) => void
 }
 
 interface QuestionStoreState {
   questions: any[]
+  isDragging: boolean
   pageInfo: any
   activeQuestionId: string | null
   actions: QuestionStoreActions
@@ -17,9 +19,13 @@ interface QuestionStoreState {
 export const useQuestionStore = create<QuestionStoreState>()((set) => {
   return {
     questions: [],
+    isDragging: false,
     pageInfo: {},
     activeQuestionId: null,
     actions: {
+      setDragging: (isDragging: boolean) => {
+        set(() => ({ isDragging }))
+      },
       setQuestions: (questions: any[]) => {
         set(() => ({ questions }))
       },

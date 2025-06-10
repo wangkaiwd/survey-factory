@@ -7,7 +7,6 @@ export interface OpenQuestionProps extends HTMLAttributes<HTMLDivElement> {
   id: string;
 }
 
-// fixme: dynamic switch between edit and preview mode will cause useOutsideClick work not correctly
 const OpenQuestion = (props: OpenQuestionProps) => {
   const { id, title, placeholder, ...restProps } = props
   return (

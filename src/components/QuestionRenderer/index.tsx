@@ -1,4 +1,4 @@
-import { blockMap } from '../../questions'
+import { blockMap } from '@/questions'
 import React from 'react'
 
 interface QuestionRendererProps {
@@ -7,7 +7,7 @@ interface QuestionRendererProps {
 
 const QuestionRenderer = (props: QuestionRendererProps) => {
   const { question } = props
-  const BlockComponent = blockMap.get(question.type)
+  const { component: BlockComponent } = blockMap.get(question.type) || {}
   if (!BlockComponent) {
     return null
   }

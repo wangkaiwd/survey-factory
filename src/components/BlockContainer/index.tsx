@@ -13,11 +13,11 @@ const BlockContainer = (props: TextContainerProps) => {
   const activeQuestionId = useQuestionStore((state) => state.activeQuestionId)
   const isActive = activeQuestionId === id
   const getCls = () => {
-    const baseCls = ['px-10 py-3 pb-6 group bg-white']
+    const baseCls = ['px-10 py-3 pb-6 group bg-white rounded-lg']
     if (!isActive) {
-      return cn(baseCls, 'hover:shadow-container hover:border-y', className)
+      return cn(baseCls, 'hover:shadow-container hover:border hover:border-gray-200', className)
     }
-    return cn(baseCls, 'shadow-container border-y', className)
+    return cn(baseCls, 'shadow-container border border-blue-400', className)
   }
 
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {

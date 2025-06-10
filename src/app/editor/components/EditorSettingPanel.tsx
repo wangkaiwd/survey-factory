@@ -6,7 +6,7 @@ import { useQuestionStore, useQuestionStoreActions } from '@/store/useQuestionSt
 import { useEffect } from 'react'
 import { debounce } from 'lodash-es'
 import { useLatest } from '@/hooks/useLatest'
-import OpenQuestionSetting from '@/questions/OpenQuestion/OpenQuestionSetting'
+import { blockMap } from '@/questions'
 
 const EditorSettingPanel = () => {
   const question = useQuestionStore((state) => {
@@ -42,6 +42,7 @@ const EditorSettingPanel = () => {
     if (!question) {
       return null
     }
+    const { setting: SettingComponent } = blockMap.get(question.type) || {}
     return (
       <Card className="w-full h-full">
         <CardHeader>
@@ -50,7 +51,7 @@ const EditorSettingPanel = () => {
         <CardContent>
           <Form {...form}>
             <form>
-              <OpenQuestionSetting/>
+              <SettingComponent/>
             </form>
           </Form>
         </CardContent>
