@@ -27,7 +27,8 @@ const SingleSelect = ({ title, name, options }: SingleSelectProps) => {
                       render={({ field }) => {
                         const onCheckedChange = (checked: boolean) => {
                           if (checked) {
-                            field.onChange([...field.value, option.value])
+                            const fieldValue = field.value || []
+                            field.onChange([...fieldValue, option.value])
                             return
                           }
                           const newValue = field.value?.filter((value: string) => value !== option.value)
