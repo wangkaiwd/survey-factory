@@ -20,7 +20,10 @@ export const useQuestionStore = create<QuestionStoreState>()((set) => {
   return {
     questions: [],
     isDragging: false,
-    pageInfo: {},
+    pageInfo: {
+      title: '',
+      description: '',
+    },
     activeQuestionId: null,
     actions: {
       setDragging: (isDragging: boolean) => {
@@ -49,3 +52,9 @@ export const useQuestionStore = create<QuestionStoreState>()((set) => {
 })
 
 export const useQuestionStoreActions = () => useQuestionStore((state) => state.actions)
+
+export const getQuestionSelector = (state: QuestionStoreState) => {
+  const { activeQuestionId, questions } = state
+  if (!activeQuestionId) return null
+  return questions.find((q) => q.id === activeQuestionId)
+}

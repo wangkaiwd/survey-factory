@@ -14,6 +14,7 @@ const SingleSelect = ({ title, name, options }: SingleSelectProps) => {
   return (
     <div>
       <FormField
+        name={name}
         control={control}
         render={() => {
           return (
@@ -24,6 +25,7 @@ const SingleSelect = ({ title, name, options }: SingleSelectProps) => {
                   return (
                     <FormField
                       key={option.value}
+                      name={name}
                       render={({ field }) => {
                         const onCheckedChange = (checked: boolean) => {
                           if (checked) {
@@ -48,7 +50,6 @@ const SingleSelect = ({ title, name, options }: SingleSelectProps) => {
                           </FormItem>
                         )
                       }}
-                      name={name}
                     />
                   )
                 })
@@ -56,7 +57,6 @@ const SingleSelect = ({ title, name, options }: SingleSelectProps) => {
             </FormItem>
           )
         }}
-        name={name}
       />
 
     </div>

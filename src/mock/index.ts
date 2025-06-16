@@ -1,16 +1,9 @@
 export const mockData = {
   pageInfo: {
     id: 'page-id-1',
-    title: {
-      align: 'center',
-      text: '标题',
-    },
-    description: {
-      align: 'center',
-      text: '描述',
-    },
+    title: '问卷标题',
+    description: '这是一个问卷调查页面的描述',
   },
-
   questions: [
     {
       id: 'question-id-1',
