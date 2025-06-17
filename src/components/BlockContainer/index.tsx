@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import React, { ComponentProps } from 'react'
-import { useQuestionStore, useQuestionStoreActions } from '@/store/useQuestionStore'
+import { useQuestionStore, useQuestionStoreActions } from '@/store/questionStore/useQuestionStore'
 import { GripHorizontal } from 'lucide-react'
 
 export interface TextContainerProps extends ComponentProps<'div'> {

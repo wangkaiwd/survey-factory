@@ -1,12 +1,7 @@
 import { useFormContext } from 'react-hook-form'
 import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
 import { Checkbox } from '@/components/ui/checkbox'
-
-interface SingleSelectProps {
-  title: string;
-  options: { label: string, value: string }[];
-  name: string;
-}
+import { SingleSelectProps } from '@/questions/SingleSelect/types'
 
 const SingleSelect = ({ title, name, options }: SingleSelectProps) => {
   const { control } = useFormContext()

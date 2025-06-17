@@ -1,4 +1,6 @@
-export const mockData = {
+import { IQuestion, PageInfo } from '@/store/questionStore/types'
+
+export const mockData: { pageInfo: PageInfo, questions: IQuestion[] } = {
   pageInfo: {
     id: 'page-id-1',
     title: '问卷标题',

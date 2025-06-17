@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect } from 'react'
 import BlockContainer from '@/components/BlockContainer'
-import { useQuestionStore, useQuestionStoreActions } from '@/store/useQuestionStore'
+import { useQuestionStore, useQuestionStoreActions } from '@/store/questionStore/useQuestionStore'
 import QuestionRenderer from '@/components/QuestionRenderer'
 import { mockData } from '@/mock'
 import DnDItem from '@/components/SmoothDnD/DnDItem'

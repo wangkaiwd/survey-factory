@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
-import { getQuestionSelector, useQuestionStore, useQuestionStoreActions } from '@/store/useQuestionStore'
+import { getQuestionSelector, useQuestionStore, useQuestionStoreActions } from '@/store/questionStore/useQuestionStore'
 import { useEffect } from 'react'
 import { debounce } from 'lodash-es'
 import { useLatest } from '@/hooks/useLatest'

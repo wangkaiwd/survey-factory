@@ -1,14 +1,8 @@
-import { HTMLAttributes } from 'react'
 import { Textarea } from '@/components/ui/textarea'
-
-export interface OpenQuestionProps extends HTMLAttributes<HTMLDivElement> {
-  title: string;
-  placeholder: string;
-  id: string;
-}
+import { OpenQuestionProps } from '@/questions/OpenQuestion/types'
 
 const OpenQuestion = (props: OpenQuestionProps) => {
-  const { id, title, placeholder, ...restProps } = props
+  const { title, placeholder, ...restProps } = props
   return (
     <div {...restProps}>
       <div className={'flex items-center justify-between'}>

@@ -1,20 +1,5 @@
 import { create } from 'zustand'
-
-interface QuestionStoreActions {
-  setQuestions: (questions: any[]) => void
-  setPageInfo: (pageInfo: any) => void
-  setActiveQuestionId: (id: string | null) => void
-  updateQuestion: (question: any) => void
-  setDragging: (isDragging: boolean) => void
-}
-
-interface QuestionStoreState {
-  questions: any[]
-  isDragging: boolean
-  pageInfo: any
-  activeQuestionId: string | null
-  actions: QuestionStoreActions
-}
+import { IQuestion, PageInfo, QuestionStoreState } from '@/store/questionStore/types'
 
 export const useQuestionStore = create<QuestionStoreState>()((set) => {
   return {
@@ -29,16 +14,16 @@ export const useQuestionStore = create<QuestionStoreState>()((set) => {
       setDragging: (isDragging: boolean) => {
         set(() => ({ isDragging }))
       },
-      setQuestions: (questions: any[]) => {
+      setQuestions: (questions: IQuestion[]) => {
         set(() => ({ questions }))
       },
-      setPageInfo: (pageInfo: any) => {
+      setPageInfo: (pageInfo: PageInfo) => {
         set(() => ({ pageInfo }))
       },
       setActiveQuestionId: (id: string | null) => {
         set(() => ({ activeQuestionId: id }))
       },
-      updateQuestion: (question: any) => {
+      updateQuestion: (question: IQuestion) => {
         const { id } = question
         set((state) => {
           const questions = state.questions.map((q) =>
@@ -53,8 +38,9 @@ export const useQuestionStore = create<QuestionStoreState>()((set) => {
 
 export const useQuestionStoreActions = () => useQuestionStore((state) => state.actions)
 
-export const getQuestionSelector = (state: QuestionStoreState) => {
+export const getQuestionSelector = (state: QuestionStoreState): IQuestion | null => {
   const { activeQuestionId, questions } = state
   if (!activeQuestionId) return null
-  return questions.find((q) => q.id === activeQuestionId)
+  return questions.find((q) => q.id === activeQuestionId) || null
 }
+

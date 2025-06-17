@@ -2,14 +2,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
-import { getQuestionSelector, useQuestionStore, useQuestionStoreActions } from '@/store/useQuestionStore'
+import { useQuestionStore, useQuestionStoreActions } from '@/store/questionStore/useQuestionStore'
 import { useEffect } from 'react'
 import { debounce } from 'lodash-es'
 import { useLatest } from '@/hooks/useLatest'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 
 const formItemBaseCls = 'flex justify-between'
-const formLabelBaseCls = 'w-20'
+const formLabelBaseCls = 'w-20 self-start pt-3'
 const SystemSetting = () => {
   const pageInfo = useQuestionStore((state) => state.pageInfo)
   const pageInfoRef = useLatest(pageInfo)
@@ -56,7 +57,7 @@ const SystemSetting = () => {
                   <FormItem className={formItemBaseCls}>
                     <FormLabel className={formLabelBaseCls}>描述</FormLabel>
                     <FormControl>
-                      <Input placeholder="请输入描述" {...field} />
+                      <Textarea placeholder="请输入描述" {...field} />
                     </FormControl>
                   </FormItem>
                 )}

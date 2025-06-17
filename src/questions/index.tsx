@@ -2,12 +2,22 @@ import OpenQuestion from '@/questions/OpenQuestion'
 import SingleSelect from '@/questions/SingleSelect'
 import OpenQuestionSetting from './OpenQuestion/OpenQuestionSetting'
 import SingleSelectSetting from './SingleSelect/Setting'
+import { FC } from 'react'
+import { OpenQuestionProps } from '@/questions/OpenQuestion/types'
+import { SingleSelectProps } from '@/questions/SingleSelect/types'
 
 // todo: plugin system
-export const blockMap = new Map<string, {
-  component: any,
-  setting: any,
-  defaultSetting: Record<string, any>
+
+export type QuestionProtocol = OpenQuestionProps | SingleSelectProps
+
+export type QuestionComponent = FC<OpenQuestionProps> | FC<SingleSelectProps>
+
+export type QuestionComponentType = 'OpenQuestion' | 'SingleSelect'
+
+export const blockMap = new Map<QuestionComponentType, {
+  component: QuestionComponent,
+  setting: FC,
+  defaultSetting: QuestionProtocol
 }>()
 blockMap.set('OpenQuestion', {
   component: OpenQuestion,

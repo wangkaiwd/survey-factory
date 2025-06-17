@@ -1,5 +1,5 @@
 'use client'
-import { getQuestionSelector, useQuestionStore } from '@/store/useQuestionStore'
+import { getQuestionSelector, useQuestionStore } from '@/store/questionStore/useQuestionStore'
 import QuestionSetting from '@/app/editor/components/QuestionSetting'
 import SystemSetting from '@/app/editor/components/SystemSetting'
 
