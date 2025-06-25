@@ -12,13 +12,6 @@ import { Form } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { blockMap } from '@/questions'
 
-// interface FormState {
-//   title: FormTextStyle
-//   description: FormTextStyle
-//
-//   [key: string]: any
-// }
-
 const EditorCanvas = () => {
   const { setPageInfo, setQuestions } = useQuestionStoreActions()
   const questions = useQuestionStore((state) => state.questions)
