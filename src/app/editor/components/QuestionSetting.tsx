@@ -9,13 +9,16 @@ import { useLatest } from '@/hooks/useLatest'
 import { blockMap } from '@/questions'
 
 const QuestionSetting = () => {
-  const question = useQuestionStore(getQuestionSelector)
+  const question = useQuestionStore(getQuestionSelector)!
   const questionRef = useLatest(question)
 
   const { updateQuestion } = useQuestionStoreActions()
 
-  // form change will update twice: form change trigger question update, then trigger values change
-  const form = useForm({ values: question?.props })
+  const form = useForm()
+
+  useEffect(() => {
+    form.reset(question.props)
+  }, [])
 
   useEffect(() => {
     const cleanup = form.subscribe({
@@ -33,6 +36,9 @@ const QuestionSetting = () => {
   }, [form.subscribe])
 
   const { setting: SettingComponent } = blockMap.get(question.type) || {}
+  if (!SettingComponent) {
+    return null
+  }
   return (
     <Card className="w-full h-full">
       <CardHeader>

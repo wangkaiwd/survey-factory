@@ -6,6 +6,7 @@ export const useQuestionStore = create<QuestionStoreState>()((set) => {
     questions: [],
     isDragging: false,
     pageInfo: {
+      id: crypto.randomUUID(),
       title: '',
       description: '',
     },
@@ -18,7 +19,12 @@ export const useQuestionStore = create<QuestionStoreState>()((set) => {
         set(() => ({ questions }))
       },
       setPageInfo: (pageInfo: PageInfo) => {
-        set(() => ({ pageInfo }))
+        set((state) => ({
+          pageInfo: {
+            ...state.pageInfo,
+            ...pageInfo,
+          },
+        }))
       },
       setActiveQuestionId: (id: string | null) => {
         set(() => ({ activeQuestionId: id }))

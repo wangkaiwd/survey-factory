@@ -1,9 +1,8 @@
 'use client'
-import React, { useEffect } from 'react'
+import React from 'react'
 import BlockContainer from '@/components/BlockContainer'
 import { useQuestionStore, useQuestionStoreActions } from '@/store/questionStore/useQuestionStore'
 import QuestionRenderer from '@/components/QuestionRenderer'
-import { mockData } from '@/mock'
 import DnDItem from '@/components/SmoothDnD/DnDItem'
 import DnDContainer from '@/components/SmoothDnD/DnDContainer'
 import { applyDrag } from '@/lib/utils'
@@ -12,23 +11,12 @@ import { Form } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { blockMap } from '@/questions'
 
-// interface FormState {
-//   title: FormTextStyle
-//   description: FormTextStyle
-//
-//   [key: string]: any
-// }
-
 const EditorCanvas = () => {
-  const { setPageInfo, setQuestions } = useQuestionStoreActions()
+  const { setQuestions } = useQuestionStoreActions()
   const questions = useQuestionStore((state) => state.questions)
   const pageInfo = useQuestionStore((state) => state.pageInfo)
   const form = useForm()
 
-  useEffect(() => {
-    setQuestions(mockData.questions)
-    setPageInfo(mockData.pageInfo)
-  }, [])
 
   const renderBlocks = () => {
     return questions.map((question) => {

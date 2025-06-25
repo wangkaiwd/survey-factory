@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import { useQuestionStore, useQuestionStoreActions } from '@/store/questionStore/useQuestionStore'
 import { useEffect } from 'react'
 import { debounce } from 'lodash-es'
-import { useLatest } from '@/hooks/useLatest'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 
@@ -13,17 +12,16 @@ const formItemBaseCls = 'flex justify-between'
 const formLabelBaseCls = 'w-20 self-start pt-3'
 const SystemSetting = () => {
   const pageInfo = useQuestionStore((state) => state.pageInfo)
-  const pageInfoRef = useLatest(pageInfo)
   const { setPageInfo } = useQuestionStoreActions()
-
-  // form change will update twice: form change trigger question update, then trigger values change
-  const form = useForm({ values: pageInfo })
-
+  const form = useForm()
+  useEffect(() => {
+    form.reset(pageInfo)
+  }, [])
   useEffect(() => {
     const cleanup = form.subscribe({
       formState: { values: true },
       callback: debounce(({ values }) => {
-        setPageInfo({ ...pageInfoRef.current, props: values })
+        setPageInfo(values)
       }, 800),
     })
     return () => cleanup()

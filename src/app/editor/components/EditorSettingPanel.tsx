@@ -6,7 +6,7 @@ import SystemSetting from '@/app/editor/components/SystemSetting'
 const EditorSettingPanel = () => {
   const question = useQuestionStore(getQuestionSelector)
 
-  const childrenRenderer = () => {
+  const renderChildren = () => {
     if (question) {
       return <QuestionSetting/>
     }
@@ -14,7 +14,7 @@ const EditorSettingPanel = () => {
   }
   return (
     <div className="w-80 h-full">
-      {childrenRenderer()}
+      {renderChildren()}
     </div>
   )
 }
