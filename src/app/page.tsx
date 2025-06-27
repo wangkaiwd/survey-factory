@@ -10,8 +10,8 @@ export default function Home() {
         <div className="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center p-4 md:p-8">
           <div className="max-w-4xl w-full space-y-8 text-center">
             <div className="flex justify-center mb-8">
-              <Image 
-                src={logo} 
+              <Image
+                src={logo}
                 alt="问卷工厂"
                 width={80}
                 height={80}
@@ -40,14 +40,9 @@ export default function Home() {
               </div>
             </div>
             <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/editor/design">
+              <Link href="/login">
                 <Button size="lg" className="w-full sm:w-auto">
                   开始创建
-                </Button>
-              </Link>
-              <Link href="/login">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                  登录账户
                 </Button>
               </Link>
             </div>
