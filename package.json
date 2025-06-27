@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "docker:up": "docker compose -f ./.devcontainer/docker-compose.yml -p survey-factory-test up -d",
+    "docker:down": "docker compose -f ./.devcontainer/docker-compose.yml -p survey-factory-test down",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
