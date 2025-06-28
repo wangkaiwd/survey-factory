@@ -9,7 +9,11 @@ import { registerSchema, RegisterFormData } from '../schemas'
 import { register } from '../actions'
 import { toast } from 'sonner'
 
-export function RegisterForm () {
+interface RegisterFormProps {
+  onSuccess?: () => void
+}
+
+export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -22,7 +26,10 @@ export function RegisterForm () {
     const result = await register(data)
     if (!result.success) {
       toast.warning(result.error)
+      return
     }
+    toast.success('注册成功，请登录')
+    onSuccess?.()
   }
 
   return (

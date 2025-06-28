@@ -6,9 +6,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { LoginForm } from './components/LoginForm'
 import { RegisterForm } from './components/RegisterForm'
 
-export default function LoginPage() {
+export default function LoginPage () {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login')
-
+  const onRegisterSuccess = () => {
+    setActiveTab('login')
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <Card className="w-[400px] p-6">
@@ -28,7 +30,7 @@ export default function LoginPage() {
               <LoginForm />
             </TabsContent>
             <TabsContent value="register">
-              <RegisterForm />
+              <RegisterForm onSuccess={onRegisterSuccess} />
             </TabsContent>
           </Tabs>
         </CardContent>

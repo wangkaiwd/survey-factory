@@ -3,13 +3,13 @@
 import prisma from '@/lib/prisma'
 import { LoginFormData, RegisterFormData } from './schemas'
 import { Prisma } from '@/generated/prisma'
+import bcrypt from 'bcrypt'
+import { saltRounds } from '@/lib/constants'
 
 export const login = async (data: LoginFormData) => {
   try {
     const user = await prisma.user.findUnique({
-      where: {
-        username: data.username,
-      },
+      where: { username: data.username },
     })
     if (!user) {
       return { success: false, error: '用户不存在' }
@@ -27,8 +27,12 @@ export const login = async (data: LoginFormData) => {
 
 export const register = async (data: RegisterFormData) => {
   try {
+    const passwordHash = await bcrypt.hash(data.password, saltRounds)
     const user = await prisma.user.create({
-      data,
+      data: {
+        username: data.username,
+        password: passwordHash,
+      },
     })
     return { success: true, user }
   } catch (error) {
