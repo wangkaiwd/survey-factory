@@ -8,7 +8,7 @@ interface Props {
 const Editor = (props: Props) => {
   return (
     <div className="w-screen h-screen flex flex-col">
-      <NavBar/>
+      <NavBar />
       <div className="flex-1 overflow-auto">
         {props.children}
       </div>
