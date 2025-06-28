@@ -1,4 +1,4 @@
-import { clsx, type ClassValue } from 'clsx'
+import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { DropResult } from 'smooth-dnd/dist/src/exportTypes'
 
@@ -26,3 +26,4 @@ export const applyDrag = (arr: any[], dragResult: DropResult, createInsertItem?:
 
   return result
 }
+

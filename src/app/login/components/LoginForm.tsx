@@ -5,10 +5,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { loginSchema, LoginFormData } from '../schemas'
-import { login } from '../actions'
+import { LoginFormData, loginSchema, RegisterFormData } from '../schemas'
+import { login } from '@/app/login/actions'
+import { toast } from 'sonner'
 
-export function LoginForm() {
+export const LoginForm = () => {
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -17,9 +18,17 @@ export function LoginForm() {
     },
   })
 
+  const onSubmit = async (data: RegisterFormData) => {
+    const result = await login(data)
+    if (!result.success) {
+      toast.error(result.error)
+      return
+    }
+    toast.success('登录成功')
+  }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(login)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="username"
@@ -52,4 +61,4 @@ export function LoginForm() {
       </form>
     </Form>
   )
-} 
+}
