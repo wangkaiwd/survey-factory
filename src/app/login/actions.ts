@@ -2,22 +2,23 @@
 
 import prisma from '@/lib/prisma'
 import { LoginFormData, RegisterFormData } from './schemas'
-import { Prisma } from '@/generated/prisma'
+import { Prisma, User } from '@/generated/prisma'
 import bcrypt from 'bcrypt'
-import { JWT_SECRET, saltRounds } from '@/lib/constants'
-import jwt from 'jsonwebtoken'
+import { saltRounds } from '@/lib/constants'
 import { comparePassword } from '@/lib/bcrypt'
+import { encryptJwt, setToken } from '@/lib/session'
 
-const generateToken = async (user: Prisma.UserCreateInput) => {
+const generateToken = async (user: User) => {
   const payload = {
     id: user.id,
     username: user.username,
   }
-  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '15d' })
+  const token = encryptJwt(payload)
   await prisma.user.update({
     where: { id: user.id },
     data: { token },
   })
+  await setToken(token)
   return token
 }
 
@@ -34,6 +35,7 @@ export const login = async (data: LoginFormData) => {
       return { success: false, error: '密码错误' }
     }
     const token = await generateToken(user)
+
     const { password, ...userWithoutPassword } = user
     return {
       success: true, user: {
