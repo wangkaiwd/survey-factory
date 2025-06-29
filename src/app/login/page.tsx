@@ -5,9 +5,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { LoginForm } from './components/LoginForm'
 import { RegisterForm } from './components/RegisterForm'
+import { useRouter } from 'next/navigation'
 
 export default function LoginPage () {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login')
+  const router = useRouter()
+  const onLoginSuccess = () => {
+    router.push('/mySurveys')
+  }
+
   const onRegisterSuccess = () => {
     setActiveTab('login')
   }
@@ -28,7 +34,7 @@ export default function LoginPage () {
               <TabsTrigger value="register">注册</TabsTrigger>
             </TabsList>
             <TabsContent value="login">
-              <LoginForm />
+              <LoginForm onSuccess={onLoginSuccess} />
             </TabsContent>
             <TabsContent value="register">
               <RegisterForm onSuccess={onRegisterSuccess} />

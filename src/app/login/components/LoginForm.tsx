@@ -9,7 +9,11 @@ import { LoginFormData, loginSchema, RegisterFormData } from '../schemas'
 import { login } from '@/app/login/actions'
 import { toast } from 'sonner'
 
-export const LoginForm = () => {
+interface LoginFormProps {
+  onSuccess?: () => void
+}
+
+export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -25,6 +29,7 @@ export const LoginForm = () => {
       return
     }
     toast.success('登录成功')
+    onSuccess?.()
   }
   return (
     <Form {...form}>
