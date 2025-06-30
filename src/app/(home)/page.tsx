@@ -1,9 +1,8 @@
-import { Button } from '@/components/ui/button'
 import Image from 'next/image'
-import Link from 'next/link'
 import logo from '@/assets/svgs/logo.svg'
+import StartButton from '@/app/(home)/components/StartButton'
 
-export default function Home() {
+export default function Home () {
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-1">
@@ -40,11 +39,7 @@ export default function Home() {
               </div>
             </div>
             <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/login">
-                <Button size="lg" className="w-full sm:w-auto">
-                  开始创建
-                </Button>
-              </Link>
+              <StartButton />
             </div>
           </div>
         </div>
