@@ -6,10 +6,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { generateMockSurveys, Survey } from '@/mock'
 import { Plus, FileText } from 'lucide-react'
 import { addMonths, isAfter, isBefore, startOfMonth, subDays } from 'date-fns'
+// import prisma from '@/lib/prisma'
+// import { decryptJwt } from '@/lib/session'
 
 async function getData(): Promise<Survey[]> {
   // 模拟API调用延迟
   await new Promise(resolve => setTimeout(resolve, 100))
+  // const decoded = await decryptJwt()
+  // const surveys = await prisma.survey.findMany({
+  //   where: {
+  //     userId: decoded.id,
+  //   },
+  // })
+  // console.log('surveys', surveys)
   return generateMockSurveys()
 }
 

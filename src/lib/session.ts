@@ -4,6 +4,12 @@ import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
+
+interface JwtPayload {
+  id: string
+  username: string
+}
+
 export const setToken = async (token: string) => {
   const expires = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000)
   const cookieStore = await cookies()
@@ -22,7 +28,7 @@ export const getToken = async () => {
   return token?.value || null
 }
 
-export const encryptJwt = (payload: { id: string, username: string }) => {
+export const encryptJwt = (payload: JwtPayload) => {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: '15d' })
 }
 
@@ -32,7 +38,7 @@ export const decryptJwt = async () => {
     if (!token) {
       redirect('/login')
     }
-    return jwt.verify(token, JWT_SECRET)
+    return jwt.verify(token, JWT_SECRET) as JwtPayload
   } catch (error) {
     console.log('JWT 解密失败:', error)
     redirect('/login')
