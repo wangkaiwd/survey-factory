@@ -1,7 +1,6 @@
 'use client'
 
-import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table'
-
+import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 interface DataTableProps<TData, TValue> {
@@ -9,7 +8,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
 }
 
-const DataTable = <TData, TValue> ({
+const DataTable = <TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) => {
@@ -17,19 +16,21 @@ const DataTable = <TData, TValue> ({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
   })
 
   return (
-    <div>
-      <div className="rounded-md border">
+    <div className="space-y-4">
+      <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-gray-50">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="hover:bg-gray-50">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead 
+                      key={header.id}
+                      className="font-semibold text-gray-700 py-4"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -48,9 +49,10 @@ const DataTable = <TData, TValue> ({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
+                  className="hover:bg-gray-50/50 transition-colors"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="py-4">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -58,8 +60,8 @@ const DataTable = <TData, TValue> ({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500">
+                  暂无数据
                 </TableCell>
               </TableRow>
             )}
