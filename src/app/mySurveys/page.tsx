@@ -3,23 +3,19 @@ import { columns } from '@/app/mySurveys/components/columns'
 import DataTable from '@/app/mySurveys/components/DataTable'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { generateMockSurveys, Survey } from '@/mock'
-import { Plus, FileText } from 'lucide-react'
-import { addMonths, isAfter, isBefore, startOfMonth, subDays } from 'date-fns'
-// import prisma from '@/lib/prisma'
-// import { decryptJwt } from '@/lib/session'
+import { Plus } from 'lucide-react'
+import prisma from '@/lib/prisma'
+import { decryptJwt } from '@/lib/session'
+import { SurveyModel } from '@/types/prismaModel'
 
-async function getData(): Promise<Survey[]> {
-  // 模拟API调用延迟
-  await new Promise(resolve => setTimeout(resolve, 100))
-  // const decoded = await decryptJwt()
-  // const surveys = await prisma.survey.findMany({
-  //   where: {
-  //     userId: decoded.id,
-  //   },
-  // })
-  // console.log('surveys', surveys)
-  return generateMockSurveys()
+async function getData(){
+  const decoded = await decryptJwt()
+  const surveys = await prisma.survey.findMany({
+    where: {
+      userId: decoded.id,
+    },
+  })
+  return surveys as unknown as SurveyModel[]
 }
 
 const MySurveys = async () => {
@@ -27,7 +23,6 @@ const MySurveys = async () => {
   return (
     <div className="min-h-screen bg-gray-50/50">
       <div className="container mx-auto px-4 py-8">
-        {/* 页面头部 */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
@@ -42,63 +37,6 @@ const MySurveys = async () => {
             </Button>
           </div>
         </div>
-
-        {/* 统计卡片 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                总问卷数
-              </CardTitle>
-              <FileText className="h-4 w-4 text-blue-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-gray-900">{data.length}</div>
-              <p className="text-xs text-gray-600 mt-1">
-                全部问卷
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                本月创建
-              </CardTitle>
-              <Plus className="h-4 w-4 text-green-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-gray-900">
-                {data.filter(survey => {
-                  const now = new Date()
-                  const prevMonthLastDay = subDays(startOfMonth(now), 1)
-                  const nextMonthFirstDay = startOfMonth(addMonths(now, 1))
-                  return isAfter(survey.createdAt, prevMonthLastDay) && isBefore(survey.createdAt, nextMonthFirstDay)
-                }).length}
-              </div>
-              <p className="text-xs text-gray-600 mt-1">
-                较上月
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
-                平均题目数
-              </CardTitle>
-              <FileText className="h-4 w-4 text-purple-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-gray-900">
-                {Math.round(data.reduce((acc, survey) => acc + survey.questions.length, 0) / data.length)}
-              </div>
-              <p className="text-xs text-gray-600 mt-1">
-                每个问卷
-              </p>
-            </CardContent>
-          </Card>
-        </div>
         <Card>
           <CardHeader>
             <CardTitle className="text-xl font-semibold text-gray-900">问卷列表</CardTitle>
@@ -107,7 +45,9 @@ const MySurveys = async () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <DataTable columns={columns} data={data} />
+            <div className="overflow-y-auto max-h-160">
+              <DataTable columns={columns} data={data} />
+            </div>
           </CardContent>
         </Card>
       </div>

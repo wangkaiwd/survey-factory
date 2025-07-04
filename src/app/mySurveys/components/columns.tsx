@@ -1,30 +1,30 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { Survey } from '@/mock'
 import { Button } from '@/components/ui/button'
 import { Edit, Share, BarChart3 } from 'lucide-react'
 import Link from 'next/link'
 import { format } from 'date-fns'
+import { SurveyModel } from '@/types/prismaModel'
 
-const formatTime = (dateString: string) => {
+const formatTime = (dateString: Date) => {
   return format(dateString, 'yyyy-MM-dd HH:mm:ss')
 }
 
-export const columns: ColumnDef<Survey>[] = [
+export const columns: ColumnDef<SurveyModel>[] = [
   {
     accessorKey: 'title',
     header: '问卷标题'
   },
   {
-    accessorKey: 'pageInfo.description',
+    accessorKey: 'description',
     header: '描述'
   },
   {
     accessorKey: 'questions',
     header: '题目数量',
     cell: ({ row }) => {
-      const questionCount = row.original.questions.length
+      const questionCount = row.original.questions?.length
       return (
         <div>
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
