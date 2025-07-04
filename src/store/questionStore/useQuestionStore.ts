@@ -1,5 +1,7 @@
 import { create } from 'zustand'
 import { IQuestion, PageInfo, QuestionStoreState } from '@/store/questionStore/types'
+// import { saveSurveyAction } from '@/app/editor/design/actions'
+// import { handleApiRes } from '@/lib/http/client'
 
 export const useQuestionStore = create<QuestionStoreState>()((set) => {
   return {
@@ -19,12 +21,19 @@ export const useQuestionStore = create<QuestionStoreState>()((set) => {
         set(() => ({ questions }))
       },
       setPageInfo: (pageInfo: PageInfo) => {
-        set((state) => ({
-          pageInfo: {
+        set((state) => {
+          const newPageInfo = {
             ...state.pageInfo,
             ...pageInfo,
-          },
-        }))
+          }
+          // handleApiRes(() => saveSurveyAction({
+          //   title: newPageInfo.title,
+          //   description: newPageInfo.description,
+          // }))
+          return ({
+            pageInfo: newPageInfo,
+          })
+        })
       },
       setActiveQuestionId: (id: string | null) => {
         set(() => ({ activeQuestionId: id }))
@@ -35,6 +44,7 @@ export const useQuestionStore = create<QuestionStoreState>()((set) => {
           const questions = state.questions.map((q) =>
             q.id === id ? question : q,
           )
+          // handleApiRes(() => saveSurveyAction({ questions }))
           return { questions }
         })
       },

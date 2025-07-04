@@ -1,9 +1,6 @@
 import { Survey } from "@/generated/prisma";
-import { QuestionProtocol } from "@/questions";
+import { IQuestion } from "@/store/questionStore/types";
 
 export interface SurveyModel extends Omit<Survey, 'questions'>{
-    questions: {
-        id: string,
-        props: QuestionProtocol
-    }[]
+    questions: IQuestion[]
 }
