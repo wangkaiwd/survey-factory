@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { registerSchema, RegisterFormData } from '../schemas'
 import { register } from '../actions'
 import { toast } from 'sonner'
+import { handleApiRes } from '@/lib/http/client'
 
 interface RegisterFormProps {
   onSuccess?: () => void
@@ -23,11 +24,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   })
 
   const onSubmit = async (data: RegisterFormData) => {
-    const result = await register(data)
-    if (!result.success) {
-      toast.warning(result.error)
-      return
-    }
+    await handleApiRes(() => register(data))
     toast.success('注册成功，请登录')
     onSuccess?.()
   }

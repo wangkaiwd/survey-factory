@@ -1,7 +1,7 @@
 import { HttpResponse } from '@/types/http'
 
-export const wrapApiHandler = async <Args extends any[], Data> (action: (...args: Args) => Promise<HttpResponse<Data>>) => {
-  return async (...args: Args) => {
+export const wrapApiHandler = <Args extends any[], Data> (action: (...args: Args) => Promise<Data>) => {
+  return async (...args: Args): Promise<HttpResponse<Data>> => {
     try {
       const result = await action(...args)
       return {

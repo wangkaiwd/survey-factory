@@ -5,9 +5,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { LoginFormData, loginSchema, RegisterFormData } from '../schemas'
+import { LoginFormData, loginSchema } from '../schemas'
 import { login } from '@/app/login/actions'
 import { toast } from 'sonner'
+import { handleApiRes } from '@/lib/http/client'
 
 interface LoginFormProps {
   onSuccess?: () => void
@@ -22,12 +23,8 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
     },
   })
 
-  const onSubmit = async (data: RegisterFormData) => {
-    const result = await login(data)
-    if (!result.success) {
-      toast.error(result.error)
-      return
-    }
+  const onSubmit = async (data: LoginFormData) => {
+    await handleApiRes(() => login(data))
     toast.success('登录成功')
     onSuccess?.()
   }
