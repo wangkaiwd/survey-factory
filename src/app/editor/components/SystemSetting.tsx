@@ -7,12 +7,17 @@ import { useEffect } from 'react'
 import { debounce } from 'lodash-es'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { useSearchParams } from 'next/navigation'
+import { handleApiRes } from '@/lib/http/client'
+import { updateSurveyAction } from '../design/actions'
 
 const formItemBaseCls = 'flex justify-between'
 const formLabelBaseCls = 'w-20 self-start pt-3'
 const SystemSetting = () => {
   const pageInfo = useQuestionStore((state) => state.pageInfo)
   const { setPageInfo } = useQuestionStoreActions()
+  const searchParams = useSearchParams()
+  const id = searchParams.get('id')
   const form = useForm()
   useEffect(() => {
     form.reset(pageInfo)
@@ -22,6 +27,7 @@ const SystemSetting = () => {
       formState: { values: true },
       callback: debounce(({ values }) => {
         setPageInfo(values)
+        handleApiRes(() => updateSurveyAction({ id, ...values }))
       }, 800),
     })
     return () => cleanup()

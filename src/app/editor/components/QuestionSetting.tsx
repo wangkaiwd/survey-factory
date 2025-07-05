@@ -7,10 +7,15 @@ import { useEffect } from 'react'
 import { debounce } from 'lodash-es'
 import { useLatest } from '@/hooks/useLatest'
 import { blockMap } from '@/questions'
+import { useSearchParams } from 'next/navigation'
+import { updateSurveyAction } from '../design/actions'
+import { handleApiRes } from '@/lib/http/client'
 
 const QuestionSetting = () => {
   const question = useQuestionStore(getQuestionSelector)!
   const questionRef = useLatest(question)
+  const searchParams = useSearchParams()
+  const id = searchParams.get('id')!
 
   const { updateQuestion } = useQuestionStoreActions()
 
@@ -26,10 +31,13 @@ const QuestionSetting = () => {
         values: true,
       },
       callback: debounce(({ values }) => {
-        updateQuestion({
+        const newQuestion = {
           ...questionRef.current,
           props: values,
-        })
+        }
+        updateQuestion(newQuestion)
+        const questions = useQuestionStore.getState().questions
+        handleApiRes(() => updateSurveyAction({ id, questions: [...questions, newQuestion] }))
       }, 800),
     })
     return () => cleanup()

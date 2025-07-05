@@ -2,8 +2,6 @@ import 'server-only'
 import { JWT_SECRET } from '@/lib/constants'
 import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
-
 
 interface JwtPayload {
   id: string
@@ -36,11 +34,11 @@ export const decryptJwt = async () => {
   try {
     const token = await getToken()
     if (!token) {
-      redirect('/login')
+      return Promise.reject({ code: '401', message: '未登录或登录已过期' })
     }
     return jwt.verify(token, JWT_SECRET) as JwtPayload
   } catch (error) {
     console.log('JWT 解密失败:', error)
-    redirect('/login')
+    return Promise.reject({ code: '401', message: '未登录或登录已过期' })
   }
 }

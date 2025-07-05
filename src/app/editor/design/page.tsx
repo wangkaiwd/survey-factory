@@ -14,16 +14,12 @@ const Editor = () => {
   const { setQuestions, setPageInfo } = useQuestionStoreActions()
   const { setLoading } = useAppStoreActions()
   const searchParams = useSearchParams()
-  const id = searchParams.get('id ')
+  const id = searchParams.get('id')!
   const loading = useAppStore((state) => state.loading)
   useEffect(() => {
     const fetchSurvey = async () => {
-      if (!id) {
-        setLoading(false)
-        return
-      }
       setLoading(true)
-      const survey = await handleApiRes(() => getSurveyAction(id))
+      const survey = await handleApiRes(() => getSurveyAction(id)).finally(() => setLoading(false))
       if (!survey) return
       setQuestions(survey.questions)
       setPageInfo({

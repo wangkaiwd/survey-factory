@@ -24,27 +24,22 @@ const generateToken = async (user: User) => {
 }
 
 export const login = wrapApiHandler<[LoginFormData], Omit<User, 'password'>>(async (data) => {
-  try {
-    const user = await prisma.user.findUnique({
-      where: { username: data.username },
-    })
-    if (!user) {
-      throw new Error('用户不存在')
-    }
-    const matched = await comparePassword(data.password, user.password)
-    if (!matched) {
-      throw new Error('密码错误')
-    }
-    const token = await generateToken(user)
+  const user = await prisma.user.findUnique({
+    where: { username: data.username },
+  })
+  if (!user) {
+    throw new Error('用户不存在')
+  }
+  const matched = await comparePassword(data.password, user.password)
+  if (!matched) {
+    throw new Error('密码错误')
+  }
+  const token = await generateToken(user)
 
-    const { password, ...userWithoutPassword } = user
-    return {
-        ...userWithoutPassword,
-        token,
-    }
-  } catch (error) {
-    console.dir(error, { depth: null })
-    throw new Error('登录失败，请稍后重试')
+  const { password, ...userWithoutPassword } = user
+  return {
+    ...userWithoutPassword,
+    token,
   }
 })
 

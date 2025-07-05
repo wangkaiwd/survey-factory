@@ -3,9 +3,9 @@ import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/for
 import { Checkbox } from '@/components/ui/checkbox'
 import { SingleSelectProps } from '@/questions/SingleSelect/types'
 
-const SingleSelect = ({ title, name, options }: SingleSelectProps) => {
+const name = 'value'
+const SingleSelect = ({ title, options }: SingleSelectProps) => {
   const { control } = useFormContext()
-
   return (
     <div>
       <FormField
