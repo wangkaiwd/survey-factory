@@ -3,14 +3,14 @@ import SingleSelect from '@/questions/SingleSelect'
 import OpenQuestionSetting from './OpenQuestion/OpenQuestionSetting'
 import SingleSelectSetting from './SingleSelect/Setting'
 import { FC } from 'react'
-import { OpenQuestionProps } from '@/questions/OpenQuestion/types'
-import { SingleSelectProps } from '@/questions/SingleSelect/types'
+import { OpenQuestionConfig } from '@/questions/OpenQuestion/types'
+import { SingleSelectConfig } from '@/questions/SingleSelect/types'
 
 // todo: plugin system
 
-export type QuestionProtocol = OpenQuestionProps | SingleSelectProps
+export type QuestionProtocol = OpenQuestionConfig | SingleSelectConfig
 
-export type QuestionComponent = FC<OpenQuestionProps> | FC<SingleSelectProps>
+export type QuestionComponent = FC<OpenQuestionConfig> | FC<SingleSelectConfig>
 
 export type QuestionComponentType = 'OpenQuestion' | 'SingleSelect'
 
@@ -32,7 +32,6 @@ blockMap.set('SingleSelect', {
   setting: SingleSelectSetting,
   defaultSetting: {
     title: 'Single Select',
-    name: 'SingleSelect',
     options: [
       { label: 'Option 1', value: 'option1' },
       { label: 'Option 2', value: 'option2' },

@@ -3,13 +3,12 @@ import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/for
 import { Checkbox } from '@/components/ui/checkbox'
 import { SingleSelectProps } from '@/questions/SingleSelect/types'
 
-const name = 'value'
-const SingleSelect = ({ title, options }: SingleSelectProps) => {
+const SingleSelect = ({ title, options, id }: SingleSelectProps) => {
   const { control } = useFormContext()
   return (
     <div>
       <FormField
-        name={name}
+        name={id}
         control={control}
         render={() => {
           return (
@@ -20,7 +19,7 @@ const SingleSelect = ({ title, options }: SingleSelectProps) => {
                   return (
                     <FormField
                       key={option.value}
-                      name={name}
+                      name={id}
                       render={({ field }) => {
                         const onCheckedChange = (checked: boolean) => {
                           if (checked) {
@@ -53,7 +52,6 @@ const SingleSelect = ({ title, options }: SingleSelectProps) => {
           )
         }}
       />
-
     </div>
   )
 }

@@ -2,6 +2,7 @@
   "name": "survey-factory",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "docker:up": "docker compose -f ./.devcontainer/docker-compose.yml -p survey-factory-test up -d",
     "docker:down": "docker compose -f ./.devcontainer/docker-compose.yml -p survey-factory-test down",

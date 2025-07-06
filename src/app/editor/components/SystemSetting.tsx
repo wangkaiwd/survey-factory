@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { useQuestionStore, useQuestionStoreActions } from '@/store/questionStore/useQuestionStore'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { debounce } from 'lodash-es'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -17,17 +17,22 @@ const SystemSetting = () => {
   const pageInfo = useQuestionStore((state) => state.pageInfo)
   const { setPageInfo } = useQuestionStoreActions()
   const searchParams = useSearchParams()
+  const isUpdateFromApi = useRef(true)
   const id = searchParams.get('id')
   const form = useForm()
   useEffect(() => {
     form.reset(pageInfo)
-  }, [])
+    isUpdateFromApi.current = true
+  }, [pageInfo])
   useEffect(() => {
     const cleanup = form.subscribe({
       formState: { values: true },
       callback: debounce(({ values }) => {
-        setPageInfo(values)
-        handleApiRes(() => updateSurveyAction({ id, ...values }))
+        if (!isUpdateFromApi.current) {
+          setPageInfo(values)
+          handleApiRes(() => updateSurveyAction({ id, ...values }))
+        }
+        isUpdateFromApi.current = false
       }, 800),
     })
     return () => cleanup()

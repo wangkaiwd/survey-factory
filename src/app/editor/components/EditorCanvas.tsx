@@ -32,7 +32,6 @@ const EditorCanvas = () => {
         props: defaultSetting,
       }
     })
-    console.log('drop')
     setQuestions(newQuestions)
     handleApiRes(() => updateSurveyAction({ id, questions: newQuestions }))
   }
